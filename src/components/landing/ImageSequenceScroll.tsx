@@ -4,6 +4,7 @@ import VariableProximity from '../ui/VariableProximity';
 import TextType from '../TextType';
 import ShapeBlur from '../ShapeBlur';
 import CountUp from '../CountUp';
+import StarBorder from '../StarBorder';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -234,16 +235,26 @@ function WarmayFeaturesContent() {
           style={{ fontFamily: "'Outfit', sans-serif", display: 'block', fontSize: 'clamp(28px,4.5vw,54px)' }}
         />
       </h2>
-      <div className="flex gap-3 flex-wrap justify-center mt-2">
-        <button className="glow-btn px-7 py-3.5 rounded-xl border-none cursor-pointer font-body text-sm font-extrabold bg-gradient-to-br from-earth to-earth-dark text-white">
+      <div className="flex gap-4 flex-wrap justify-center mt-4">
+        <StarBorder
+          as="button"
+          color="#C2672A"
+          speed="4s"
+          thickness={2}
+          innerClassName="!py-5 !px-12 !text-[20px] font-extrabold tracking-wide !border-0"
+        >
           🌸 Acceder a la App
-        </button>
-        <button
+        </StarBorder>
+        <StarBorder
+          as="button"
+          color="#F59E0B"
+          speed="4s"
+          thickness={2}
+          innerClassName="!py-5 !px-12 !text-[20px] font-bold tracking-wide"
           onClick={() => document.getElementById('crisis')?.scrollIntoView({ behavior: 'smooth' })}
-          className="px-7 py-3.5 rounded-xl cursor-pointer font-body text-sm font-bold bg-base2/80 text-warmay-text border-2 border-border hover:border-earth hover:text-earth transition-all duration-250"
         >
           Conoce más ↓
-        </button>
+        </StarBorder>
       </div>
     </div>
   );
