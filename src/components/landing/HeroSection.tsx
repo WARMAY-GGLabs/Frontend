@@ -12,7 +12,7 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+    transition: { delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   }),
 };
 
@@ -82,12 +82,16 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display font-black text-[clamp(36px,7vw,80px)] leading-[1.05] mb-4"
-          style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)' }}
+          className="font-black text-[clamp(40px,8vw,96px)] leading-[1.0] mb-4 tracking-tight"
+          style={{
+            fontFamily: '"Playfair Display", Georgia, serif',
+            textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)',
+            fontWeight: 900,
+          }}
         >
           Ninguna madre
           <br />
-          <span className="text-earth">debería morir</span>
+          <span style={{ color: 'var(--color-earth)', fontStyle: 'italic' }}>debería morir</span>
           <br />
           dando vida
         </motion.h1>
