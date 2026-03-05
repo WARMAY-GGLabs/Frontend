@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
+import VariableProximity from '../ui/VariableProximity';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -9,23 +10,57 @@ function getFramePath(index: number): string {
   return `/img/ezgif-frame-${num}.png`;
 }
 
+/* ── Headline with VariableProximity effect ── */
+function HeadlineContent() {
+  const headlineRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={headlineRef} style={{ position: 'relative' }}>
+      <div className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase mb-4 px-4 py-1.5 bg-base2/80 backdrop-blur-sm border border-border rounded-full inline-block">
+        🌸 Bolivia · Programa de Salud Materna
+      </div>
+      <h1 className="font-display text-[clamp(32px,6vw,72px)] leading-[1.05] mb-4"
+          style={{ textShadow: '0 4px 30px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.6)' }}>
+        <VariableProximity
+          label="Ninguna madre"
+          className="text-warmay-text"
+          fromFontVariationSettings="'wght' 400"
+          toFontVariationSettings="'wght' 900"
+          containerRef={headlineRef}
+          radius={150}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
+        />
+        <VariableProximity
+          label="debería morir"
+          className="text-earth"
+          fromFontVariationSettings="'wght' 400"
+          toFontVariationSettings="'wght' 900"
+          containerRef={headlineRef}
+          radius={150}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
+        />
+        <VariableProximity
+          label="dando vida"
+          className="text-warmay-text"
+          fromFontVariationSettings="'wght' 400"
+          toFontVariationSettings="'wght' 900"
+          containerRef={headlineRef}
+          radius={150}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
+        />
+      </h1>
+    </div>
+  );
+}
+
 /* ── Text sections that appear at different scroll points ── */
 const textSections = [
   {
-    range: [0, 0, 0.18, 0.24] as const, // visible from start, fadeOut start, gone
-    content: (
-      <>
-        <div className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase mb-4 px-4 py-1.5 bg-base2/80 backdrop-blur-sm border border-border rounded-full inline-block">
-          🌸 Bolivia · Programa de Salud Materna
-        </div>
-        <h1 className="font-display font-black text-[clamp(32px,6vw,72px)] leading-[1.05] mb-4"
-            style={{ textShadow: '0 4px 30px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.6)' }}>
-          Ninguna madre<br/>
-          <span className="text-earth">debería morir</span><br/>
-          dando vida
-        </h1>
-      </>
-    ),
+    range: [0, 0, 0.18, 0.24] as const,
+    content: <HeadlineContent />,
   },
   {
     range: [0.22, 0.28, 0.40, 0.46] as const,
