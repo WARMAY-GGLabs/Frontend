@@ -1,0 +1,139 @@
+/* ── Wiphala Bar ── */
+.wiphala-bar {
+  height: 5px;
+  background: linear-gradient(90deg,
+    #E40303 14.28%, #FF8C00 14.28% 28.56%, #FFED00 28.56% 42.84%,
+    #008026 42.84% 57.12%, #004DFF 57.12% 71.40%, #750787 71.40% 85.68%, #FFFFFF 85.68%);
+}
+
+/* ── NAV ── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(15, 5, 0, 0.92);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--earth), var(--panic));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px #C2672A40;
+}
+
+.nav-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.nav-subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.nav-center {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  background: transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--base3);
+  color: var(--text);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-switcher {
+  display: flex;
+  background: var(--base3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  padding: 6px 10px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text3);
+  transition: all 0.2s;
+}
+
+.lang-btn.active {
+  background: var(--earth);
+  color: #fff;
+}
+
+.nav-panic {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--panic);
+  color: #fff;
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 800;
+  animation: navPulse 2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes navPulse {
+  0%, 100% { box-shadow: 0 0 0 0 #DC262660; }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@media (max-width: 600px) {
+  .navbar { padding: 10px 14px; }
+  .nav-center { display: none; }
+}

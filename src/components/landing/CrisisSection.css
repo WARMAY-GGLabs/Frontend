@@ -1,0 +1,108 @@
+/* ── CRISIS SECTION ── */
+.crisis-section {
+  padding: 80px 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--earth);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(194, 103, 42, 0.15);
+  border-radius: 20px;
+}
+
+.section-title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(28px, 5vw, 48px);
+  line-height: 1.1;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+}
+
+.section-title em {
+  font-style: normal;
+  color: var(--earth);
+}
+
+.section-sub {
+  color: var(--text2);
+  font-size: 15px;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+  padding: 10px 16px;
+  background: rgba(26, 8, 0, 0.55);
+  backdrop-filter: var(--blur-sm);
+  border-radius: 10px;
+}
+
+.crisis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.crisis-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  background: rgba(39, 18, 5, 0.85);
+  backdrop-filter: var(--blur-sm);
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.crisis-card:hover {
+  border-color: #DC262660;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px #DC262618;
+}
+
+.crisis-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.crisis-name {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.crisis-desc {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.5;
+}
+
+.crisis-pct {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--panic);
+  background: #DC262620;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+  .crisis-section { padding: 40px 18px; }
+}
