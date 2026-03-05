@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import VariableProximity from '../ui/VariableProximity';
+import ScrollReveal from '../ScrollReveal';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -56,6 +57,34 @@ function HeadlineContent() {
   );
 }
 
+/* ── Subtitle with ScrollReveal word-by-word effect ── */
+function SubtitleContent() {
+  return (
+    <div className="max-w-[600px] text-center" style={{ textShadow: '0 2px 16px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.7)' }}>
+      <ScrollReveal
+        baseOpacity={0.15}
+        enableBlur
+        baseRotation={2}
+        blurStrength={4}
+        containerClassName="!my-0"
+        textClassName="!text-[clamp(20px,3vw,30px)] text-warmay-text !font-semibold leading-[1.7]"
+      >
+        WARMAY es la primera plataforma de prevención de mortalidad materna que combina alertas de emergencia, seguimiento prenatal verificado en blockchain y IA trilingüe para madres bolivianas.
+      </ScrollReveal>
+      <ScrollReveal
+        baseOpacity={0.15}
+        enableBlur
+        baseRotation={1}
+        blurStrength={2}
+        containerClassName="!my-1"
+        textClassName="!text-[16px] text-earth-light !font-normal italic"
+      >
+        🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
+      </ScrollReveal>
+    </div>
+  );
+}
+
 /* ── Text sections that appear at different scroll points ── */
 const textSections = [
   {
@@ -64,19 +93,7 @@ const textSections = [
   },
   {
     range: [0.22, 0.28, 0.40, 0.46] as const,
-    content: (
-      <>
-        <p className="text-[clamp(15px,2.5vw,20px)] text-warmay-text2 max-w-[600px] leading-[1.7] px-5 py-4 bg-base/70 backdrop-blur-md rounded-xl mb-4"
-           style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-          WARMAY es la primera plataforma de prevención de mortalidad materna que
-          combina alertas de emergencia, seguimiento prenatal verificado en
-          blockchain y IA trilingüe para madres bolivianas.
-        </p>
-        <p className="text-[13px] text-muted italic px-3.5 py-1.5 bg-base/60 rounded-lg inline-block">
-          🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
-        </p>
-      </>
-    ),
+    content: <SubtitleContent />,
   },
   {
     range: [0.44, 0.50, 0.62, 0.68] as const,

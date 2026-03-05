@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import ScrollReveal from '../ScrollReveal';
 
 const stats = [
   { value: 164, suffix: '', label: 'muertes por cada<br/>100,000 nacidos vivos' },
@@ -97,26 +98,28 @@ export default function HeroSection() {
         </motion.h1>
 
         {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.7 }}
-          className="text-[clamp(15px,2.5vw,20px)] text-warmay-text2 max-w-[640px] leading-[1.7] mb-3 px-5 py-3 bg-base/60 backdrop-blur-sm rounded-xl"
+        <ScrollReveal
+          baseOpacity={0.1}
+          enableBlur
+          baseRotation={2}
+          blurStrength={3}
+          containerClassName="max-w-[640px] mb-3 px-5 py-3 bg-base/60 backdrop-blur-sm rounded-xl !my-0"
+          textClassName="!text-[clamp(15px,2.5vw,20px)] text-warmay-text2 leading-[1.7] !font-normal"
         >
-          WARMAY es la primera plataforma de prevención de mortalidad materna que
-          combina alertas de emergencia, seguimiento prenatal verificado en
-          blockchain y IA trilingüe para madres bolivianas.
-        </motion.p>
+          WARMAY es la primera plataforma de prevención de mortalidad materna que combina alertas de emergencia, seguimiento prenatal verificado en blockchain y IA trilingüe para madres bolivianas.
+        </ScrollReveal>
 
         {/* Languages */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="text-[13px] text-muted italic mb-10 px-3.5 py-1.5 bg-base/60 rounded-lg inline-block"
+        <ScrollReveal
+          baseOpacity={0.1}
+          enableBlur
+          baseRotation={1}
+          blurStrength={2}
+          containerClassName="mb-10 px-3.5 py-1.5 bg-base/60 rounded-lg inline-block !my-0"
+          textClassName="!text-[13px] text-muted !font-normal italic"
         >
           🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
-        </motion.p>
+        </ScrollReveal>
 
         {/* Stats */}
         <div ref={statsRef} className="flex gap-6 justify-center flex-wrap mb-12">
