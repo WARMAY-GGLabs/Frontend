@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import VariableProximity from '../ui/VariableProximity';
 import TextType from '../TextType';
+import ShapeBlur from '../ShapeBlur';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -95,6 +96,88 @@ function SubtitleContent() {
   );
 }
 
+/* ── Stats with MagicBento-style cards + ShapeBlur ── */
+const statsData = [
+  { num: '164', label: 'muertes por cada\n100,000 nacidos vivos', icon: '🩸', glowColor: '194,103,42' },
+  { num: '78%', label: 'son prevenibles con\natención oportuna',   icon: '💚', glowColor: '21,128,61'  },
+  { num: '47%', label: 'ocurren en áreas\nrurales sin acceso',     icon: '🌄', glowColor: '245,158,11' },
+];
+
+function StatsContent() {
+  return (
+    <>
+      <style>{`
+        .sc { --gi:0; --gx:50%; --gy:50%; position:relative; overflow:hidden; }
+        .sc {
+          border-color: rgba(var(--sg), 0.6) !important;
+          box-shadow: 0 0 12px rgba(var(--sg), 0.25), inset 0 0 12px rgba(var(--sg), 0.06);
+        }
+        .sc:hover {
+          border-color: rgba(var(--sg), 0.95) !important;
+          box-shadow: 0 0 28px rgba(var(--sg), 0.55), 0 0 8px rgba(var(--sg), 0.3), inset 0 0 18px rgba(var(--sg), 0.12);
+        }
+        .sc::after {
+          content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:10;
+          background: radial-gradient(220px circle at var(--gx) var(--gy),
+            rgba(var(--sg), calc(var(--gi)*.85)) 0%,
+            rgba(var(--sg), calc(var(--gi)*.35)) 40%,
+            transparent 70%);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor; mask-composite: exclude; padding:2px;
+        }
+      `}</style>
+      <div className="flex gap-5 justify-center flex-wrap">
+        {statsData.map((stat, i) => (
+          <motion.div
+            key={i}
+            className="sc text-center px-7 py-6 rounded-2xl min-w-[170px] bg-base2/90 backdrop-blur-md border border-border cursor-default"
+            style={{ '--sg': stat.glowColor } as React.CSSProperties}
+            initial={{ opacity: 0, y: 30, scale: 0.88 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22,1,0.36,1] as [number,number,number,number] }}
+            whileHover={{ y: -6, scale: 1.06, transition: { duration: 0.2 } }}
+            onMouseMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty('--gx', `${e.clientX - r.left}px`);
+              e.currentTarget.style.setProperty('--gy', `${e.clientY - r.top}px`);
+              e.currentTarget.style.setProperty('--gi', '1');
+            }}
+            onMouseLeave={(e) => e.currentTarget.style.setProperty('--gi', '0')}
+          >
+            {/* ShapeBlur interactive background */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ zIndex: 0 }}>
+              <ShapeBlur
+                variation={1}
+                pixelRatioProp={window.devicePixelRatio || 1}
+                shapeSize={0.8}
+                roundness={1}
+                borderSize={0.04}
+                circleSize={0.35}
+                circleEdge={0.8}
+              />
+            </div>
+            <div className="relative z-10">
+              <div className="text-2xl mb-1">{stat.icon}</div>
+              <div
+                className="font-display font-black leading-none bg-clip-text text-transparent"
+                style={{
+                  fontSize: 'clamp(52px,8vw,80px)',
+                  backgroundImage: 'radial-gradient(circle, #E8895A 0%, #C2672A 50%, #F59E0B 100%)'
+                }}
+              >
+                {stat.num}
+              </div>
+              <div className="text-[13px] text-warmay-text font-semibold mt-3 leading-[1.5] whitespace-pre-line" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.9)' }}>
+                {stat.label}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 /* ── Text sections that appear at different scroll points ── */
 const textSections = [
   {
@@ -107,24 +190,7 @@ const textSections = [
   },
   {
     range: [0.44, 0.50, 0.62, 0.68] as const,
-    content: (
-      <div className="flex gap-5 justify-center flex-wrap">
-        {[
-          { num: '164', label: 'muertes por cada\n100,000 nacidos vivos' },
-          { num: '78%', label: 'son prevenibles con\natención oportuna' },
-          { num: '47%', label: 'ocurren en áreas\nrurales sin acceso' },
-        ].map((stat, i) => (
-          <div key={i} className="text-center px-5 py-4 rounded-2xl min-w-[130px] bg-base2/85 backdrop-blur-md border border-border">
-            <div className="font-display font-black text-3xl bg-gradient-to-br from-earth to-sun bg-clip-text text-transparent">
-              {stat.num}
-            </div>
-            <div className="text-[11px] text-warmay-text2 mt-1 leading-[1.4] whitespace-pre-line">
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
-    ),
+    content: <StatsContent />,
   },
   {
     range: [0.66, 0.72, 0.88, 0.94] as const,
