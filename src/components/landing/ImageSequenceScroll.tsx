@@ -3,6 +3,7 @@ import { useScroll, useTransform, motion } from 'framer-motion';
 import VariableProximity from '../ui/VariableProximity';
 import TextType from '../TextType';
 import ShapeBlur from '../ShapeBlur';
+import CountUp from '../CountUp';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -98,9 +99,9 @@ function SubtitleContent() {
 
 /* ── Stats with MagicBento-style cards + ShapeBlur ── */
 const statsData = [
-  { num: '164', label: 'muertes por cada\n100,000 nacidos vivos', icon: '🩸', glowColor: '194,103,42' },
-  { num: '78%', label: 'son prevenibles con\natención oportuna',   icon: '💚', glowColor: '21,128,61'  },
-  { num: '47%', label: 'ocurren en áreas\nrurales sin acceso',     icon: '🌄', glowColor: '245,158,11' },
+  { to: 164, suffix: '',  label: 'muertes por cada\n100,000 nacidos vivos', icon: '🩸', glowColor: '194,103,42' },
+  { to: 78,  suffix: '%', label: 'son prevenibles con\natención oportuna',   icon: '💚', glowColor: '21,128,61'  },
+  { to: 47,  suffix: '%', label: 'ocurren en áreas\nrurales sin acceso',     icon: '🌄', glowColor: '245,158,11' },
 ];
 
 function StatsContent() {
@@ -159,13 +160,21 @@ function StatsContent() {
             <div className="relative z-10">
               <div className="text-2xl mb-1">{stat.icon}</div>
               <div
-                className="font-display font-black leading-none bg-clip-text text-transparent"
+                className="font-display font-black leading-none bg-clip-text text-transparent flex items-baseline justify-center"
                 style={{
                   fontSize: 'clamp(52px,8vw,80px)',
                   backgroundImage: 'radial-gradient(circle, #E8895A 0%, #C2672A 50%, #F59E0B 100%)'
                 }}
               >
-                {stat.num}
+                <CountUp
+                  from={0}
+                  to={stat.to}
+                  duration={1.8}
+                  delay={i * 0.15 + 0.3}
+                  direction="up"
+                  className="bg-clip-text text-transparent"
+                />
+                {stat.suffix && <span>{stat.suffix}</span>}
               </div>
               <div className="text-[13px] text-warmay-text font-semibold mt-3 leading-[1.5] whitespace-pre-line" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.9)' }}>
                 {stat.label}
