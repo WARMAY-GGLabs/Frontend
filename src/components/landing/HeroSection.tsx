@@ -1,11 +1,20 @@
 import { useEffect, useRef, useCallback } from 'react';
-import './HeroSection.css';
+import { motion } from 'framer-motion';
 
 const stats = [
-  { value: 164, suffix: '', label: 'muertes por cada\n100,000 nacidos vivos' },
-  { value: 78, suffix: '%', label: 'son prevenibles con\natención oportuna' },
-  { value: 47, suffix: '%', label: 'ocurren en áreas\nrurales sin acceso' },
+  { value: 164, suffix: '', label: 'muertes por cada<br/>100,000 nacidos vivos' },
+  { value: 78, suffix: '%', label: 'son prevenibles con<br/>atención oportuna' },
+  { value: 47, suffix: '%', label: 'ocurren en áreas<br/>rurales sin acceso' },
 ];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 export default function HeroSection() {
   const statsRef = useRef<HTMLDivElement>(null);
@@ -14,10 +23,8 @@ export default function HeroSection() {
   const animateCounters = useCallback(() => {
     if (animatedRef.current) return;
     animatedRef.current = true;
-
-    const numEls = statsRef.current?.querySelectorAll('.num');
+    const numEls = statsRef.current?.querySelectorAll('.stat-num');
     if (!numEls) return;
-
     numEls.forEach((el, i) => {
       const target = stats[i].value;
       const suffix = stats[i].suffix;
@@ -25,10 +32,7 @@ export default function HeroSection() {
       const increment = target / 60;
       const timer = setInterval(() => {
         current += increment;
-        if (current >= target) {
-          current = target;
-          clearInterval(timer);
-        }
+        if (current >= target) { current = target; clearInterval(timer); }
         (el as HTMLElement).textContent = Math.floor(current) + suffix;
       }, 20);
     });
@@ -37,19 +41,14 @@ export default function HeroSection() {
   useEffect(() => {
     const el = statsRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            animateCounters();
-            observer.disconnect();
-          }
+          if (entry.isIntersecting) { animateCounters(); observer.disconnect(); }
         });
       },
       { threshold: 0.3 }
     );
-
     observer.observe(el);
     return () => observer.disconnect();
   }, [animateCounters]);
@@ -59,51 +58,116 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="hero">
-      <div className="hero">
-        <div className="hero-geo" />
-        <div className="hero-eyebrow">
-          🌸 <span>Bolivia · Programa de Salud Materna</span>
-        </div>
-        <h1>
-          <span>Ninguna madre</span>
+    <section id="hero" className="relative overflow-hidden">
+      {/* Decorative Wiphala circle */}
+      <div className="absolute -top-10 -right-15 w-[300px] h-[300px] opacity-[0.04] rounded-full"
+        style={{
+          background: 'conic-gradient(#E40303 0 45deg,#FF8C00 45deg 90deg,#FFED00 90deg 135deg,#008026 135deg 180deg,#004DFF 180deg 225deg,#750787 225deg 270deg,#FFFFFF 270deg 315deg,#E40303 315deg 360deg)',
+        }}
+      />
+
+      <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-7 py-15 text-center relative">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase mb-5 px-4 py-1.5 bg-base2/85 backdrop-blur-sm border border-border rounded-full inline-block"
+        >
+          🌸 Bolivia · Programa de Salud Materna
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display font-black text-[clamp(36px,7vw,80px)] leading-[1.05] mb-4"
+          style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)' }}
+        >
+          Ninguna madre
           <br />
-          <em>debería morir</em>
+          <span className="text-earth">debería morir</span>
           <br />
-          <span>dando vida</span>
-        </h1>
-        <p className="hero-sub">
+          dando vida
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.7 }}
+          className="text-[clamp(15px,2.5vw,20px)] text-warmay-text2 max-w-[640px] leading-[1.7] mb-3 px-5 py-3 bg-base/60 backdrop-blur-sm rounded-xl"
+        >
           WARMAY es la primera plataforma de prevención de mortalidad materna que
           combina alertas de emergencia, seguimiento prenatal verificado en
           blockchain y IA trilingüe para madres bolivianas.
-        </p>
-        <p className="hero-lang">
-          🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
-        </p>
+        </motion.p>
 
-        <div className="stats-band" ref={statsRef}>
+        {/* Languages */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="text-[13px] text-muted italic mb-10 px-3.5 py-1.5 bg-base/60 rounded-lg inline-block"
+        >
+          🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
+        </motion.p>
+
+        {/* Stats */}
+        <div ref={statsRef} className="flex gap-6 justify-center flex-wrap mb-12">
           {stats.map((stat, i) => (
-            <div className="stat-pill animate-on-scroll" key={i}>
-              <div className="num">0{stat.suffix}</div>
+            <motion.div
+              key={i}
+              custom={i}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="text-center px-6 py-4 rounded-2xl min-w-[140px] bg-base2/88 backdrop-blur-md border border-border"
+            >
+              <div className="stat-num font-display font-black text-4xl bg-gradient-to-br from-earth to-sun bg-clip-text text-transparent">
+                0{stat.suffix}
+              </div>
               <div
-                className="label"
-                dangerouslySetInnerHTML={{
-                  __html: stat.label.replace('\n', '<br/>'),
-                }}
+                className="text-[11px] text-warmay-text2 mt-1 leading-[1.4]"
+                dangerouslySetInnerHTML={{ __html: stat.label }}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        <div className="hero-ctas">
-          <button className="btn-primary">🌸 Acceder a la App</button>
-          <button className="btn-secondary" onClick={() => scrollTo('como')}>
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.6 }}
+          className="flex gap-3.5 justify-center flex-wrap"
+        >
+          <motion.button
+            whileHover={{ y: -3, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            className="glow-btn px-8 py-4 rounded-xl border-none cursor-pointer font-body text-[15px] font-extrabold bg-gradient-to-br from-earth to-earth-dark text-white transition-all duration-250"
+          >
+            🌸 Acceder a la App
+          </motion.button>
+          <motion.button
+            whileHover={{ y: -2, borderColor: '#C2672A', color: '#C2672A' }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => scrollTo('como')}
+            className="px-8 py-4 rounded-xl cursor-pointer font-body text-[15px] font-bold bg-base2/80 text-warmay-text border-2 border-border transition-all duration-250"
+          >
             ¿Cómo funciona? →
-          </button>
-          <button className="btn-secondary" onClick={() => scrollTo('orgs')}>
+          </motion.button>
+          <motion.button
+            whileHover={{ y: -2, borderColor: '#C2672A', color: '#C2672A' }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => scrollTo('orgs')}
+            className="px-8 py-4 rounded-xl cursor-pointer font-body text-[15px] font-bold bg-base2/80 text-warmay-text border-2 border-border transition-all duration-250"
+          >
             Para ONG / Gobiernos
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );

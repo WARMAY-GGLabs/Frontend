@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import Navbar from '../components/landing/Navbar';
-import HeroSection from '../components/landing/HeroSection';
+import ImageSequenceScroll from '../components/landing/ImageSequenceScroll';
 import OrgBand from '../components/landing/OrgBand';
 import CrisisSection from '../components/landing/CrisisSection';
 import HowItWorks from '../components/landing/HowItWorks';
@@ -12,7 +11,6 @@ const PARTICLE_COLORS = ['#C2672A', '#F59E0B', '#DC2626', '#8B5CF6', '#3B82F6'];
 
 export default function LandingPage() {
   const [emergencyOpen, setEmergencyOpen] = useState(false);
-  const containerRef = useScrollAnimation<HTMLDivElement>();
 
   // Create floating particles on mount
   useEffect(() => {
@@ -36,17 +34,20 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div ref={containerRef}>
+    <>
       <Navbar onOpenEmergency={() => setEmergencyOpen(true)} />
-      <HeroSection />
-      <OrgBand />
-      <CrisisSection />
-      <HowItWorks />
+      <main>
+        {/* Scrollytelling: image sequence + text overlays */}
+        <ImageSequenceScroll />
+        <OrgBand />
+        <CrisisSection />
+        <HowItWorks />
+      </main>
       <Footer />
       <EmergencyModal
         isOpen={emergencyOpen}
         onClose={() => setEmergencyOpen(false)}
       />
-    </div>
+    </>
   );
 }
