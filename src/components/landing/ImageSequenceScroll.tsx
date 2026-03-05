@@ -187,6 +187,68 @@ function StatsContent() {
   );
 }
 
+/* ── What does WARMAY do? with VariableProximity ── */
+function WarmayFeaturesContent() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={containerRef} className="flex flex-col items-center gap-5" style={{ position: 'relative' }}>
+      <div className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase px-3 py-1 bg-earth/15 rounded-full">
+        ¿Qué hace WARMAY?
+      </div>
+      <h2
+        className="font-display font-black leading-[1.05] text-center"
+        style={{
+          fontSize: 'clamp(40px,7vw,80px)',
+          textShadow: '0 4px 30px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.6)'
+        }}
+      >
+        <VariableProximity
+          label="Emergencias"
+          className="text-earth"
+          fromFontVariationSettings="'wght' 400"
+          toFontVariationSettings="'wght' 900"
+          containerRef={containerRef}
+          radius={180}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
+        />
+        <VariableProximity
+          label="Blockchain"
+          className="text-warmay-text"
+          fromFontVariationSettings="'wght' 300"
+          toFontVariationSettings="'wght' 900"
+          containerRef={containerRef}
+          radius={180}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
+        />
+        <VariableProximity
+          label="Inteligencia Artificial"
+          className="text-sun"
+          fromFontVariationSettings="'wght' 300"
+          toFontVariationSettings="'wght' 900"
+          containerRef={containerRef}
+          radius={180}
+          falloff="gaussian"
+          style={{ fontFamily: "'Outfit', sans-serif", display: 'block', fontSize: 'clamp(28px,4.5vw,54px)' }}
+        />
+      </h2>
+      <div className="flex gap-3 flex-wrap justify-center mt-2">
+        <button className="glow-btn px-7 py-3.5 rounded-xl border-none cursor-pointer font-body text-sm font-extrabold bg-gradient-to-br from-earth to-earth-dark text-white">
+          🌸 Acceder a la App
+        </button>
+        <button
+          onClick={() => document.getElementById('crisis')?.scrollIntoView({ behavior: 'smooth' })}
+          className="px-7 py-3.5 rounded-xl cursor-pointer font-body text-sm font-bold bg-base2/80 text-warmay-text border-2 border-border hover:border-earth hover:text-earth transition-all duration-250"
+        >
+          Conoce más ↓
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Text sections that appear at different scroll points ── */
 const textSections = [
   {
@@ -203,28 +265,7 @@ const textSections = [
   },
   {
     range: [0.66, 0.72, 0.88, 0.94] as const,
-    content: (
-      <div className="flex flex-col items-center gap-4">
-        <div className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase px-3 py-1 bg-earth/15 rounded-full">
-          ¿Qué hace WARMAY?
-        </div>
-        <h2 className="font-display font-black text-[clamp(24px,4vw,44px)] leading-[1.1] text-center"
-            style={{ textShadow: '0 4px 30px rgba(0,0,0,0.9)' }}>
-          <span className="text-earth">Emergencias</span> · Blockchain · IA
-        </h2>
-        <div className="flex gap-3 flex-wrap justify-center mt-2">
-          <button className="glow-btn px-7 py-3.5 rounded-xl border-none cursor-pointer font-body text-sm font-extrabold bg-gradient-to-br from-earth to-earth-dark text-white">
-            🌸 Acceder a la App
-          </button>
-          <button
-            onClick={() => document.getElementById('crisis')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-7 py-3.5 rounded-xl cursor-pointer font-body text-sm font-bold bg-base2/80 text-warmay-text border-2 border-border hover:border-earth hover:text-earth transition-all duration-250"
-          >
-            Conoce más ↓
-          </button>
-        </div>
-      </div>
-    ),
+    content: <WarmayFeaturesContent />,
   },
 ];
 
