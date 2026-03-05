@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import VariableProximity from '../ui/VariableProximity';
-import ScrollReveal from '../ScrollReveal';
+import TextType from '../TextType';
 
 const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
@@ -57,30 +57,40 @@ function HeadlineContent() {
   );
 }
 
-/* ── Subtitle with ScrollReveal word-by-word effect ── */
+/* ── Subtitle with word-by-word Framer Motion animation ── */
 function SubtitleContent() {
+  const words = 'WARMAY es la primera plataforma de prevención de mortalidad materna que combina alertas de emergencia, seguimiento prenatal verificado en blockchain y IA trilingüe para madres bolivianas.'.split(' ');
+
   return (
-    <div className="max-w-[600px] text-center" style={{ textShadow: '0 2px 16px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.7)' }}>
-      <ScrollReveal
-        baseOpacity={0.15}
-        enableBlur
-        baseRotation={2}
-        blurStrength={4}
-        containerClassName="!my-0"
-        textClassName="!text-[clamp(20px,3vw,30px)] text-warmay-text !font-semibold leading-[1.7]"
-      >
-        WARMAY es la primera plataforma de prevención de mortalidad materna que combina alertas de emergencia, seguimiento prenatal verificado en blockchain y IA trilingüe para madres bolivianas.
-      </ScrollReveal>
-      <ScrollReveal
-        baseOpacity={0.15}
-        enableBlur
-        baseRotation={1}
-        blurStrength={2}
-        containerClassName="!my-1"
-        textClassName="!text-[16px] text-earth-light !font-normal italic"
-      >
-        🌐 Disponible en Español · Quechua (Runa Simi) · Aymara
-      </ScrollReveal>
+    <div className="max-w-[620px] text-center" style={{ textShadow: '0 2px 16px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.7)' }}>
+      <p className="text-[clamp(20px,3vw,30px)] font-semibold leading-[1.7] text-warmay-text flex flex-wrap justify-center gap-x-[0.3em] gap-y-0">
+        {words.map((word, i) => (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, filter: 'blur(6px)', y: 8 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {word}
+          </motion.span>
+        ))}
+      </p>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <span className="text-[22px]">🌐</span>
+        <TextType
+          text={['Español', 'Quechua · Runa Simi', 'Aymara']}
+          typingSpeed={60}
+          deletingSpeed={35}
+          pauseDuration={1800}
+          loop
+          showCursor
+          cursorCharacter="|"
+          cursorClassName="text-earth"
+          textColors={['#FDF6EC', '#E8895A', '#F59E0B']}
+          className="text-[clamp(22px,3.5vw,36px)] font-black tracking-wide uppercase"
+          style={{ textShadow: '0 2px 16px rgba(0,0,0,0.95)' }}
+        />
+      </div>
     </div>
   );
 }
