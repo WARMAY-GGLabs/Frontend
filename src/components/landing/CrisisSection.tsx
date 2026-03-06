@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import DotGrid from '../DotGrid';
 
 const crisisData = [
   { pct: 27, icon: '🩸', name: 'Hemorragia Postparto', desc: 'Alerta activa en menos de 30 seg.' },
@@ -12,8 +13,25 @@ export default function CrisisSection() {
   return (
     <section
       id="crisis"
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-24"
+      className="relative min-h-screen flex flex-col items-center justify-center px-6 py-24 overflow-hidden"
     >
+      {/* DotGrid background */}
+      <div className="absolute inset-0 z-0">
+        <DotGrid
+          dotSize={4}
+          gap={22}
+          baseColor="#3A1A0A"
+          activeColor="#C2672A"
+          proximity={130}
+          shockRadius={220}
+          shockStrength={4}
+          resistance={750}
+          returnDuration={1.5}
+        />
+      </div>
+
+      {/* Content on top */}
+      <div className="relative z-10 w-full flex flex-col items-center">
       {/* Eyebrow */}
       <motion.p
         initial={{ opacity: 0 }}
@@ -74,6 +92,7 @@ export default function CrisisSection() {
             </div>
           </motion.div>
         ))}
+      </div>
       </div>
     </section>
   );
