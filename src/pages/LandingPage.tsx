@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '../components/landing/Navbar';
+
+type Page = 'inicio' | 'app' | 'crisis' | 'prenatal' | 'blockchain' | 'nosotros';
 import ImageSequenceScroll from '../components/landing/ImageSequenceScroll';
 import OrgBand from '../components/landing/OrgBand';
 import CrisisSection from '../components/landing/CrisisSection';
@@ -9,7 +11,11 @@ import EmergencyModal from '../components/landing/EmergencyModal';
 
 const PARTICLE_COLORS = ['#C2672A', '#F59E0B', '#DC2626', '#8B5CF6', '#3B82F6'];
 
-export default function LandingPage() {
+interface LandingPageProps {
+  onPageChange?: (page: Page) => void;
+}
+
+export default function LandingPage({ onPageChange }: LandingPageProps) {
   const [emergencyOpen, setEmergencyOpen] = useState(false);
 
   // Create floating particles on mount
@@ -35,7 +41,11 @@ export default function LandingPage() {
 
   return (
     <>
-      <Navbar onPanicClick={() => setEmergencyOpen(true)} />
+      <Navbar
+        activePage="inicio"
+        onPageChange={onPageChange}
+        onPanicClick={() => setEmergencyOpen(true)}
+      />
       <main>
         {/* Scrollytelling: image sequence + text overlays */}
         <ImageSequenceScroll />
