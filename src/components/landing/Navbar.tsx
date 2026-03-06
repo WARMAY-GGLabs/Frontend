@@ -171,11 +171,11 @@ type Lang = "ES" | "QU" | "AY";
 type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
 
 const NAV_ITEMS: { id: Page; label: string }[] = [
-  { id: "inicio",     label: "Inicio" },
-  { id: "app",        label: "App Demo" },
-  { id: "crisis",     label: "Crisis" },
-  { id: "prenatal",   label: "Prenatal" },
-  { id: "blockchain", label: "Blockchain" },
+  { id: "inicio",     label: "Misión" },
+  { id: "app",        label: "La App" },
+  { id: "crisis",     label: "¿Cómo funciona?" },
+  { id: "prenatal",   label: "Institucional" },
+  { id: "blockchain", label: "Tecnología" },
   { id: "nosotros",   label: "Nosotros" },
 ];
 
