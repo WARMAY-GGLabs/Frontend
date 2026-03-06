@@ -7,9 +7,10 @@ interface NavbarProps {
 
 const navItems = [
   { id: 'hero', label: 'Misión' },
-  { id: 'crisis', label: 'Causas' },
-  { id: 'como', label: 'Cómo funciona' },
-  { id: 'orgs', label: 'Institucional' },
+  { id: 'app', label: 'La App' },
+  { id: 'como', label: '¿Cómo funciona?' },
+  { id: 'institucional', label: 'Institucional' },
+  { id: 'tecnologia', label: 'Tecnología' }
 ];
 
 const languages = ['ES', 'QU', 'AY'];
@@ -33,147 +34,185 @@ export default function Navbar({ onOpenEmergency }: NavbarProps) {
 
   return (
     <>
-      {/* Wiphala accent */}
-      <div className="wiphala-bar fixed top-0 left-0 right-0 z-[201]" />
+      <style jsx global>{`
+        @keyframes panicPulse {
+          0%, 100% { 
+            background-color: #C2672A;
+            box-shadow: 0 0 0 0 rgba(194, 103, 42, 0.7);
+          }
+          50% { 
+            background-color: #E67E3A;
+            box-shadow: 0 0 20px 5px rgba(194, 103, 42, 0.4);
+          }
+        }
+      `}</style>
+
+      {/* Wiphala bar */}
+      <div className="fixed top-0 left-0 right-0 z-[201] h-[5px] w-full" 
+           style={{ 
+             background: 'linear-gradient(90deg, #F0C45A 0%, #F0C45A 20%, #FFFFFF 20%, #FFFFFF 40%, #4A9E5A 40%, #4A9E5A 60%, #3A6EA5 60%, #3A6EA5 80%, #B13E3E 80%, #B13E3E 100%)'
+           }} 
+      />
 
       <motion.nav
-        initial={{ y: -12, opacity: 0 }}
+        initial={{ y: -16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-[5px] left-0 right-0 z-[200] transition-all duration-500 ${
-          scrolled
-            ? 'bg-[#110600]/95 backdrop-blur-2xl border-b border-border/40 shadow-[0_4px_60px_rgba(0,0,0,0.7)]'
-            : 'bg-transparent border-b border-transparent'
-        }`}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-[5px] left-0 right-0 z-[200] font-sans"
       >
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-10 py-4 gap-8">
+        {/* Main bar */}
+        <div
+          className={`transition-all duration-500 ${
+            scrolled 
+              ? 'bg-[#2C1810]/95 backdrop-blur-xl shadow-lg' 
+              : 'bg-[#2C1810]'
+          }`}
+          style={{ borderBottom: '1px solid rgba(194, 103, 42, 0.2)' }}
+        >
+          <div className="max-w-5xl mx-auto flex items-center justify-between px-10 py-5 lg:px-16">
 
-          {/* ── Brand ── */}
-          <button
-            onClick={() => scrollTo('hero')}
-            className="flex items-center gap-3.5 cursor-pointer border-none bg-transparent shrink-0"
-          >
-            <motion.div
-              whileHover={{ scale: 1.08, rotate: 6 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-earth to-panic/70 flex items-center justify-center text-xl shadow-[0_0_22px_#C2672A30]"
+            {/* Brand (left) */}
+            <button
+              onClick={() => scrollTo('hero')}
+              className="flex items-center gap-2 cursor-pointer border-none bg-transparent group flex-shrink-0"
             >
-              🌸
-            </motion.div>
-            <div className="text-left">
-              <p className="font-display text-[20px] font-black leading-tight bg-gradient-to-r from-earth-light to-sun bg-clip-text text-transparent">
-                WARMAY
-              </p>
-              <p className="font-mono text-[10px] text-warmay-text3/60 tracking-[0.18em] leading-none uppercase">
-                Bolivia · Salud Materna
-              </p>
-            </div>
-          </button>
-
-          {/* ── Center nav (desktop) ── */}
-          <div className="hidden md:flex items-center gap-2">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="relative px-5 py-2.5 cursor-pointer border-none bg-transparent group"
-              >
-                <span
-                  className={`font-body text-[13.5px] font-semibold tracking-wide transition-colors duration-200 ${
-                    activeNav === item.id
-                      ? 'text-warmay-text'
-                      : 'text-warmay-text3 group-hover:text-warmay-text2'
-                  }`}
-                >
-                  {item.label}
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C2672A] to-[#E67E3A] flex items-center justify-center text-white text-lg shadow-lg group-hover:shadow-xl transition-all">
+                🌸
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[#F5E6D3] text-4xl font-bold leading-none tracking-tight">
+                  WARMAY
                 </span>
-                {activeNav === item.id && (
-                  <motion.div
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-lg bg-base3/70 border border-border/50 -z-10"
-                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+                <span className="text-[#B8A89A] text-[10px] tracking-[0.2em] uppercase leading-tight">
+                  SALVANDO VIDAS MATERNAS · BOLIVIA
+                </span>
+              </div>
+            </button>
 
-          {/* ── Right ── */}
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Language switcher */}
-            <div className="hidden sm:flex items-center gap-0.5 border border-border/40 rounded-lg p-1">
-              {languages.map((lang) => (
+            {/* Nav links (center) - hidden on mobile */}
+            <div className="hidden lg:flex items-center justify-center gap-1">
+              {navItems.map((item) => (
                 <button
-                  key={lang}
-                  onClick={() => setActiveLang(lang)}
-                  className={`px-3 py-1.5 rounded-md border-none cursor-pointer font-mono text-[11px] font-bold tracking-widest transition-all duration-200 ${
-                    activeLang === lang
-                      ? 'bg-earth/25 text-earth-light'
-                      : 'bg-transparent text-warmay-text3/50 hover:text-warmay-text3'
-                  }`}
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className="relative px-3 py-2 cursor-pointer border-none bg-transparent group"
                 >
-                  {lang}
+                  <span
+                    className={`text-base font-medium transition-colors duration-300 ${
+                      activeNav === item.id 
+                        ? 'text-[#F5E6D3]' 
+                        : 'text-[#B8A89A] hover:text-[#D4C5B8]'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                  {activeNav === item.id && (
+                    <motion.span
+                      layoutId="underline"
+                      className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#C2672A] rounded-full"
+                      transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                    />
+                  )}
                 </button>
               ))}
             </div>
 
-            {/* Emergency CTA */}
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={onOpenEmergency}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg border-none cursor-pointer bg-panic text-white font-body text-[12px] font-extrabold tracking-widest uppercase whitespace-nowrap shadow-[0_0_24px_#DC262650]"
-              style={{ animation: 'panicPulse 2s ease-in-out infinite' }}
-            >
-              🚨 Emergencia
-            </motion.button>
+            {/* Right section */}
+            <div className="flex items-center gap-4 flex-shrink-0">
+              {/* Language selector - hidden on mobile */}
+              <div className="hidden sm:flex items-center gap-2">
+                {languages.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => setActiveLang(lang)}
+                    className={`px-2 py-1 rounded cursor-pointer text-sm font-medium tracking-wider transition-all duration-200 ${
+                      activeLang === lang
+                        ? 'text-[#F5E6D3] bg-[#C2672A]/20'
+                        : 'text-[#B8A89A] hover:text-[#D4C5B8]'
+                    }`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
 
-            {/* Burger (mobile) */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden flex flex-col justify-center gap-[5px] w-9 h-9 cursor-pointer border border-border/40 rounded-lg bg-base3/50"
-              aria-label="Menú"
-            >
-              <motion.span animate={menuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }} className="block mx-auto w-4 h-[1.5px] bg-warmay-text2 rounded-full origin-center" />
-              <motion.span animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}        className="block mx-auto w-4 h-[1.5px] bg-warmay-text2 rounded-full" />
-              <motion.span animate={menuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }} className="block mx-auto w-4 h-[1.5px] bg-warmay-text2 rounded-full origin-center" />
-            </button>
+              {/* Vertical divider */}
+              <span className="hidden sm:block w-px h-6 bg-[#C2672A]/30" />
+
+              {/* Emergency button */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onOpenEmergency}
+                className="flex items-center gap-2 px-4 py-1.5 rounded-md border-none cursor-pointer text-white text-sm font-bold tracking-wider uppercase whitespace-nowrap"
+                style={{ 
+                  background: 'linear-gradient(135deg, #C2672A, #E67E3A)',
+                  animation: 'panicPulse 2.5s ease-in-out infinite',
+                  boxShadow: '0 4px 15px rgba(194, 103, 42, 0.3)'
+                }}
+              >
+                <span className="text-base">🚨</span>
+                EMERGENCIA
+              </motion.button>
+
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="lg:hidden flex flex-col justify-center gap-1.5 w-8 h-8 cursor-pointer border-none bg-transparent"
+                aria-label="Menú"
+              >
+                <motion.span 
+                  animate={menuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }} 
+                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full origin-center transition-colors"
+                />
+                <motion.span 
+                  animate={menuOpen ? { opacity: 0 } : { opacity: 1 }} 
+                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full transition-colors"
+                />
+                <motion.span 
+                  animate={menuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }} 
+                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full origin-center transition-colors"
+                />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* ── Mobile menu ── */}
+        {/* Mobile menu */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden overflow-hidden border-t border-border/30 bg-[#110600]/97 backdrop-blur-2xl"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden bg-[#2C1810] border-t border-[#C2672A]/20"
             >
-              <div className="flex flex-col px-8 py-5 gap-1">
+              <div className="px-6 py-4 flex flex-col gap-1">
                 {navItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => scrollTo(item.id)}
-                    className={`text-left px-4 py-3 rounded-xl border-none cursor-pointer font-body text-[14px] font-semibold transition-colors duration-200 ${
+                    className={`text-left px-4 py-3 rounded-lg border-none cursor-pointer text-base transition-all duration-200 ${
                       activeNav === item.id
-                        ? 'text-warmay-text bg-base3'
-                        : 'text-warmay-text3 hover:text-warmay-text2 bg-transparent'
+                        ? 'text-[#F5E6D3] bg-[#C2672A]/10 font-medium'
+                        : 'text-[#B8A89A] hover:text-[#F5E6D3] hover:bg-[#C2672A]/5'
                     }`}
                   >
                     {item.label}
                   </button>
                 ))}
-                <div className="flex gap-1.5 mt-4 pt-4 border-t border-border/30">
+                
+                {/* Mobile language selector */}
+                <div className="flex gap-3 mt-4 pt-4 border-t border-[#C2672A]/20">
                   {languages.map((lang) => (
                     <button
                       key={lang}
                       onClick={() => setActiveLang(lang)}
-                      className={`px-4 py-2 rounded-lg border-none cursor-pointer font-mono text-[11px] font-bold tracking-widest transition-all ${
-                        activeLang === lang
-                          ? 'bg-earth/20 text-earth-light border border-earth/30'
-                          : 'bg-transparent text-warmay-text3/50 border border-transparent'
+                      className={`flex-1 px-4 py-2 rounded-lg border-none cursor-pointer text-sm font-medium tracking-wider transition-all ${
+                        activeLang === lang 
+                          ? 'text-[#F5E6D3] bg-[#C2672A]' 
+                          : 'text-[#B8A89A] bg-[#3A2A22] hover:bg-[#4A3A32]'
                       }`}
                     >
                       {lang}
