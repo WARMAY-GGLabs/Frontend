@@ -35,7 +35,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <Navbar onOpenEmergency={() => setEmergencyOpen(true)} />
+      <Navbar onPanicClick={() => setEmergencyOpen(true)} />
       <main>
         {/* Scrollytelling: image sequence + text overlays */}
         <ImageSequenceScroll />
