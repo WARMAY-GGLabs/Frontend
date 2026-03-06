@@ -1,103 +1,78 @@
-import { motion } from 'framer-motion';
-
-const links = [
+const navLinks = [
   { href: '#hero', label: 'Misión' },
   { href: '#crisis', label: 'Causas' },
-  { href: '#como', label: '¿Cómo funciona?' },
+  { href: '#como', label: 'Cómo funciona' },
   { href: '#orgs', label: 'Institucional' },
 ];
 
-const techStack = ['WorldID', 'Chainlink CRE', 'Base (L2)', 'IA Trilingüe'];
-
 export default function Footer() {
   return (
-    <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="border-t border-border bg-base/90 backdrop-blur-md"
-    >
-      <div className="max-w-[1100px] mx-auto px-7 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-[10px] bg-gradient-to-br from-earth to-panic flex items-center justify-center text-lg">
-                🌸
-              </div>
-              <div className="font-display text-lg font-black bg-gradient-to-r from-earth-light to-sun bg-clip-text text-transparent">
-                WARMAY
-              </div>
-            </div>
-            <p className="text-xs text-warmay-text3 leading-[1.6] mb-4">
-              Salvando vidas maternas en Bolivia a través de tecnología blockchain, IA trilingüe y redes comunitarias.
-            </p>
-            <div className="font-mono text-[10px] text-muted tracking-[0.1em]">
-              Salvando vidas maternas · Bolivia
-            </div>
-          </div>
+    <footer className="w-full bg-[#0A0300] border-t border-[#2A1200] flex flex-col items-center">
+      {/* Wiphala bar */}
+      <div
+        className="h-[3px] w-full"
+        style={{
+          background:
+            'linear-gradient(90deg,#E40303 14.28%,#FF8C00 14.28% 28.56%,#FFED00 28.56% 42.84%,#008026 42.84% 57.12%,#004DFF 57.12% 71.40%,#750787 71.40% 85.68%,#FFFFFF 85.68%)',
+        }}
+      />
 
-          {/* Navigation */}
-          <div>
-            <h4 className="font-bold text-sm mb-4 text-warmay-text2">Navegación</h4>
-            <div className="flex flex-col gap-2.5">
-              {links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-[13px] text-warmay-text3 font-semibold hover:text-earth transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
+      <div className="w-full max-w-[700px] px-8 py-12 flex flex-col items-center text-center gap-8">
 
-          {/* Tech */}
-          <div>
-            <h4 className="font-bold text-sm mb-4 text-warmay-text2">Tecnología</h4>
-            <div className="flex flex-col gap-2.5">
-              {techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="text-[13px] text-warmay-text3 font-semibold"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div
+            className="w-8 h-8 rounded-[9px] flex items-center justify-center text-base flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg,#C2672A,#9B3A1A)',
+              boxShadow: '0 0 18px #C2672A33',
+            }}
+          >
+            🌸
           </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="font-bold text-sm mb-4 text-warmay-text2">Soporte</h4>
-            <div className="flex flex-col gap-2.5">
-              <span className="text-[13px] text-warmay-text3">Contacto</span>
-              <span className="text-[13px] text-warmay-text3">Privacidad</span>
-              <span className="text-[13px] text-warmay-text3">Términos</span>
-              <span className="text-[13px] text-warmay-text3">FAQ</span>
-            </div>
-          </div>
+          <span
+            className="font-black text-xl tracking-tight leading-none"
+            style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              background: 'linear-gradient(135deg,#E8895A,#F59E0B)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            WARMAY
+          </span>
         </div>
 
-        {/* Divider + Copyright */}
-        <div className="border-t border-border pt-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="font-mono text-[11px] text-muted">
-            © 2026 WARMAY — Programa de Salud Materna · Bolivia
-          </div>
-          <div className="flex gap-3">
-            {['Twitter', 'GitHub', 'Discord'].map((s) => (
-              <span
-                key={s}
-                className="text-xs text-warmay-text3 hover:text-earth cursor-pointer transition-colors duration-200"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* Tagline */}
+        <p className="text-[13px] text-center max-w-[400px] leading-relaxed" style={{ color: '#7A5030' }}>
+          Salud materna digital en Bolivia — Español · Quechua · Aymara
+        </p>
+
+        {/* Nav links */}
+        <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-[13px] transition-colors duration-200 hover:text-[#C2672A]"
+              style={{ color: '#6B4020' }}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Divider */}
+        <div className="w-full h-px" style={{ background: 'linear-gradient(90deg, transparent, #3A1A0A, transparent)' }} />
+
+        {/* Copyright */}
+        <p
+          className="text-[11px] tracking-wide text-center"
+          style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#4A2A10' }}
+        >
+          © 2026 WARMAY · Programa de Salud Materna · Bolivia
+        </p>
       </div>
-    </motion.footer>
+    </footer>
   );
 }
