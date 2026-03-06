@@ -19,8 +19,8 @@ const cardVariants = {
 
 export default function HowItWorks() {
   return (
-    <section id="como" className="border-t border-b border-border bg-base2/60 backdrop-blur-sm">
-      <div className="py-20 px-7 max-w-[1000px] mx-auto">
+    <section id="como" className="min-h-screen flex items-center justify-center border-t border-b border-border bg-base2/60 backdrop-blur-sm">
+      <div className="w-full py-20 px-7 max-w-[1100px] mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <motion.div
