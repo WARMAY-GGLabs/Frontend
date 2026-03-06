@@ -1,229 +1,267 @@
-import { useState, useEffect } from 'react';
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { useState } from "react";
 
-interface NavbarProps {
-  onOpenEmergency: () => void;
-}
+// ── CSS Variables & Styles ──
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Nunito:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;700&display=swap');
 
-const navItems = [
-  { id: 'hero', label: 'Misión' },
-  { id: 'app', label: 'La App' },
-  { id: 'como', label: '¿Cómo funciona?' },
-  { id: 'institucional', label: 'Institucional' },
-  { id: 'tecnologia', label: 'Tecnología' }
+  :root {
+    --earth: #C2672A;
+    --earth-d: #8B3A10;
+    --earth-l: #E8895A;
+    --panic: #DC2626;
+    --base: #1A0800;
+    --base2: #271205;
+    --base3: #3D1E0A;
+    --border: #5C3018;
+    --muted: #9A6040;
+    --text: #FDF6EC;
+    --text2: #E8C9A0;
+    --text3: #B8915A;
+    --display: 'Playfair Display', Georgia, serif;
+    --body: 'Nunito', 'Helvetica Neue', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --blur-lg: blur(24px);
+    --blur-sm: blur(8px);
+  }
+
+  .wiphala-bar {
+    height: 5px;
+    background: linear-gradient(90deg,
+      #E40303 14.28%,
+      #FF8C00 14.28% 28.56%,
+      #FFED00 28.56% 42.84%,
+      #008026 42.84% 57.12%,
+      #004DFF 57.12% 71.40%,
+      #750787 71.40% 85.68%,
+      #FFFFFF 85.68%
+    );
+  }
+
+  .warmay-nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: rgba(15, 5, 0, 0.92);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--body);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--earth), var(--panic));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px #C2672A40;
+  }
+
+  .nav-title {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .nav-subtitle {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-center {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    background: transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover,
+  .nav-btn.active {
+    background: var(--base3);
+    color: var(--text);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lang-switcher {
+    display: flex;
+    background: var(--base3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .lang-btn {
+    padding: 6px 10px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    background: transparent;
+    color: var(--text3);
+    transition: all 0.2s;
+  }
+
+  .lang-btn.active {
+    background: var(--earth);
+    color: #fff;
+  }
+
+  .nav-panic {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: var(--panic);
+    color: #fff;
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 800;
+    animation: navPulse 2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes navPulse {
+    0%, 100% { box-shadow: 0 0 0 0 #DC262660; }
+    50%       { box-shadow: 0 0 0 8px transparent; }
+  }
+`;
+
+// ── Types ──
+type Lang = "ES" | "QU" | "AY";
+type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
+
+const NAV_ITEMS: { id: Page; label: string }[] = [
+  { id: "inicio",     label: "Inicio" },
+  { id: "app",        label: "App Demo" },
+  { id: "crisis",     label: "Crisis" },
+  { id: "prenatal",   label: "Prenatal" },
+  { id: "blockchain", label: "Blockchain" },
+  { id: "nosotros",   label: "Nosotros" },
 ];
 
-const languages = ['ES', 'QU', 'AY'];
+const LANGS: Lang[] = ["ES", "QU", "AY"];
 
-export default function Navbar({ onOpenEmergency }: NavbarProps) {
-  const [activeNav, setActiveNav] = useState('hero');
-  const [activeLang, setActiveLang] = useState('ES');
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
+// ── Props ──
+interface NavbarProps {
+  activePage?: Page;
+  activeLang?: Lang;
+  onPageChange?: (page: Page) => void;
+  onLangChange?: (lang: Lang) => void;
+  onPanicClick?: () => void;
+}
 
-  useEffect(() => {
-    return scrollY.on('change', (v) => setScrolled(v > 40));
-  }, [scrollY]);
+// ── Component ──
+export default function Navbar({
+  activePage: initialPage = "inicio",
+  activeLang: initialLang = "ES",
+  onPageChange,
+  onLangChange,
+  onPanicClick,
+}: NavbarProps) {
+  const [activePage, setActivePage] = useState<Page>(initialPage);
+  const [activeLang, setActiveLang]  = useState<Lang>(initialLang);
 
-  const scrollTo = (id: string) => {
-    setActiveNav(id);
-    setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const handlePage = (page: Page) => {
+    setActivePage(page);
+    onPageChange?.(page);
+  };
+
+  const handleLang = (lang: Lang) => {
+    setActiveLang(lang);
+    onLangChange?.(lang);
   };
 
   return (
     <>
-      <style jsx global>{`
-        @keyframes panicPulse {
-          0%, 100% { 
-            background-color: #C2672A;
-            box-shadow: 0 0 0 0 rgba(194, 103, 42, 0.7);
-          }
-          50% { 
-            background-color: #E67E3A;
-            box-shadow: 0 0 20px 5px rgba(194, 103, 42, 0.4);
-          }
-        }
-      `}</style>
+      <style>{styles}</style>
 
-      {/* Wiphala bar */}
-      <div className="fixed top-0 left-0 right-0 z-[201] h-[5px] w-full" 
-           style={{ 
-             background: 'linear-gradient(90deg, #F0C45A 0%, #F0C45A 20%, #FFFFFF 20%, #FFFFFF 40%, #4A9E5A 40%, #4A9E5A 60%, #3A6EA5 60%, #3A6EA5 80%, #B13E3E 80%, #B13E3E 100%)'
-           }} 
-      />
+      {/* Wiphala colour bar */}
+      <div className="wiphala-bar" />
 
-      <motion.nav
-        initial={{ y: -16, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-[5px] left-0 right-0 z-[200] font-sans"
-      >
-        {/* Main bar */}
-        <div
-          className={`transition-all duration-500 ${
-            scrolled 
-              ? 'bg-[#2C1810]/95 backdrop-blur-xl shadow-lg' 
-              : 'bg-[#2C1810]'
-          }`}
-          style={{ borderBottom: '1px solid rgba(194, 103, 42, 0.2)' }}
-        >
-          <div className="max-w-5xl mx-auto flex items-center justify-between px-10 py-5 lg:px-16">
+      {/* Main navbar */}
+      <nav className="warmay-nav">
 
-            {/* Brand (left) */}
-            <button
-              onClick={() => scrollTo('hero')}
-              className="flex items-center gap-2 cursor-pointer border-none bg-transparent group flex-shrink-0"
-            >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C2672A] to-[#E67E3A] flex items-center justify-center text-white text-lg shadow-lg group-hover:shadow-xl transition-all">
-                🌸
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[#F5E6D3] text-4xl font-bold leading-none tracking-tight">
-                  WARMAY
-                </span>
-                <span className="text-[#B8A89A] text-[10px] tracking-[0.2em] uppercase leading-tight">
-                  SALVANDO VIDAS MATERNAS · BOLIVIA
-                </span>
-              </div>
-            </button>
-
-            {/* Nav links (center) - hidden on mobile */}
-            <div className="hidden lg:flex items-center justify-center gap-1">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className="relative px-3 py-2 cursor-pointer border-none bg-transparent group"
-                >
-                  <span
-                    className={`text-base font-medium transition-colors duration-300 ${
-                      activeNav === item.id 
-                        ? 'text-[#F5E6D3]' 
-                        : 'text-[#B8A89A] hover:text-[#D4C5B8]'
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                  {activeNav === item.id && (
-                    <motion.span
-                      layoutId="underline"
-                      className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#C2672A] rounded-full"
-                      transition={{ type: 'spring', stiffness: 500, damping: 38 }}
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Right section */}
-            <div className="flex items-center gap-4 flex-shrink-0">
-              {/* Language selector - hidden on mobile */}
-              <div className="hidden sm:flex items-center gap-2">
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => setActiveLang(lang)}
-                    className={`px-2 py-1 rounded cursor-pointer text-sm font-medium tracking-wider transition-all duration-200 ${
-                      activeLang === lang
-                        ? 'text-[#F5E6D3] bg-[#C2672A]/20'
-                        : 'text-[#B8A89A] hover:text-[#D4C5B8]'
-                    }`}
-                  >
-                    {lang}
-                  </button>
-                ))}
-              </div>
-
-              {/* Vertical divider */}
-              <span className="hidden sm:block w-px h-6 bg-[#C2672A]/30" />
-
-              {/* Emergency button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={onOpenEmergency}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-md border-none cursor-pointer text-white text-sm font-bold tracking-wider uppercase whitespace-nowrap"
-                style={{ 
-                  background: 'linear-gradient(135deg, #C2672A, #E67E3A)',
-                  animation: 'panicPulse 2.5s ease-in-out infinite',
-                  boxShadow: '0 4px 15px rgba(194, 103, 42, 0.3)'
-                }}
-              >
-                <span className="text-base">🚨</span>
-                EMERGENCIA
-              </motion.button>
-
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="lg:hidden flex flex-col justify-center gap-1.5 w-8 h-8 cursor-pointer border-none bg-transparent"
-                aria-label="Menú"
-              >
-                <motion.span 
-                  animate={menuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }} 
-                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full origin-center transition-colors"
-                />
-                <motion.span 
-                  animate={menuOpen ? { opacity: 0 } : { opacity: 1 }} 
-                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full transition-colors"
-                />
-                <motion.span 
-                  animate={menuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }} 
-                  className="block w-5 h-0.5 bg-[#F5E6D3] rounded-full origin-center transition-colors"
-                />
-              </button>
-            </div>
+        {/* Brand */}
+        <div className="nav-brand">
+          <div className="nav-logo">🌸</div>
+          <div>
+            <div className="nav-title">WARMAY</div>
+            <div className="nav-subtitle">SALVANDO VIDAS MATERNAS</div>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="lg:hidden bg-[#2C1810] border-t border-[#C2672A]/20"
+        {/* Page links */}
+        <div className="nav-center">
+          {NAV_ITEMS.map(({ id, label }) => (
+            <button
+              key={id}
+              className={`nav-btn${activePage === id ? " active" : ""}`}
+              onClick={() => handlePage(id)}
             >
-              <div className="px-6 py-4 flex flex-col gap-1">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollTo(item.id)}
-                    className={`text-left px-4 py-3 rounded-lg border-none cursor-pointer text-base transition-all duration-200 ${
-                      activeNav === item.id
-                        ? 'text-[#F5E6D3] bg-[#C2672A]/10 font-medium'
-                        : 'text-[#B8A89A] hover:text-[#F5E6D3] hover:bg-[#C2672A]/5'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-                
-                {/* Mobile language selector */}
-                <div className="flex gap-3 mt-4 pt-4 border-t border-[#C2672A]/20">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setActiveLang(lang)}
-                      className={`flex-1 px-4 py-2 rounded-lg border-none cursor-pointer text-sm font-medium tracking-wider transition-all ${
-                        activeLang === lang 
-                          ? 'text-[#F5E6D3] bg-[#C2672A]' 
-                          : 'text-[#B8A89A] bg-[#3A2A22] hover:bg-[#4A3A32]'
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Right side: lang switcher + panic button */}
+        <div className="nav-right">
+          <div className="lang-switcher">
+            {LANGS.map((lang) => (
+              <button
+                key={lang}
+                className={`lang-btn${activeLang === lang ? " active" : ""}`}
+                onClick={() => handleLang(lang)}
+              >
+                {lang}
+              </button>
+            ))}
+          </div>
+
+          <button className="nav-panic" onClick={onPanicClick}>
+            🚨 EMERGENCIA
+          </button>
+        </div>
+      </nav>
     </>
   );
 }
