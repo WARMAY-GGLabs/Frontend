@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import DotGrid from '../DotGrid';
+import TiltedCard from '../TiltedCard';
 
 const steps = [
   { num: '01', icon: '🌍', title: 'Identidad verificada', desc: 'WorldID ZK proof — eres única, sin revelar tu nombre. Anti-Sybil.' },
@@ -20,13 +21,13 @@ const cardVariants = {
 
 export default function HowItWorks() {
   return (
-    <section id="como" className="relative min-h-screen flex items-center justify-center border-t border-b border-border overflow-hidden">
+    <section id="como" className="relative min-h-screen flex items-center justify-center  overflow-hidden">
       {/* DotGrid background */}
       <div className="absolute inset-0 z-0">
         <DotGrid
           dotSize={4}
           gap={22}
-          baseColor="#3A1A0A"
+          baseColor="#300a3a"
           activeColor="#C2672A"
           proximity={130}
           shockRadius={220}
@@ -36,9 +37,9 @@ export default function HowItWorks() {
         />
       </div>
 
-      <div className="relative z-10 w-full py-20 px-7 max-w-[1100px] mx-auto">
+      <div className="relative z-10 w-full py-28 px-10 max-w-[1200px] mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-20">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -58,9 +59,9 @@ export default function HowItWorks() {
             <span className="text-earth">WARMAY</span> en 4 pasos
           </motion.h2>
         </div>
-
+<br /><br /><br /><br />
         {/* Steps grid */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 justify-items-center px-4">
           {steps.map((step, i) => (
             <motion.div
               key={step.num}
@@ -69,15 +70,39 @@ export default function HowItWorks() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-30px' }}
-              whileHover={{ y: -5, borderColor: '#C2672A' }}
-              className="bg-base/88 backdrop-blur-md border border-border rounded-2xl p-7 relative cursor-default transition-colors duration-300"
             >
-              <span className="font-display font-black text-5xl text-earth opacity-25 absolute top-4 right-5 leading-none">
-                {step.num}
-              </span>
-              <div className="text-[28px] mb-3.5">{step.icon}</div>
-              <div className="font-bold text-[15px] mb-2">{step.title}</div>
-              <div className="text-[13px] text-warmay-text3 leading-[1.6]">{step.desc}</div>
+              <TiltedCard
+                containerWidth="270px"
+                containerHeight="320px"
+                imageWidth="280px"
+                imageHeight="320px"
+                imageSrc=""
+                rotateAmplitude={14}
+                scaleOnHover={1.06}
+                showMobileWarning={false}
+                showTooltip={false}
+                displayOverlayContent
+                overlayContent={
+                  <div
+                    className="w-full h-full flex flex-col justify-between p-6 rounded-[15px] cursor-default"
+                    style={{
+                      background: 'linear-gradient(160deg, #ac5d2b 0%, #1A0800 100%)',
+                      border: '1.5px solid rgba(194,103,42,0.35)',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                    }}
+                  >
+                    <div>
+                      <span className="font-display font-black text-6xl text-earth  leading-none block mb-4">
+                        {step.num}
+                      </span>
+                      <div className="text-[32px] mb-4">{step.icon}</div>
+                      <div className="font-bold text-[15px] mb-2 text-[#F5E6D3]">{step.title}</div>
+                      <div className="text-[12px] text-[#B8915A] leading-[1.6]">{step.desc}</div>
+                    </div>
+                    <div className="h-[2px] rounded-full bg-gradient-to-r from-earth to-transparent mt-4" />
+                  </div>
+                }
+              />
             </motion.div>
           ))}
         </div>
