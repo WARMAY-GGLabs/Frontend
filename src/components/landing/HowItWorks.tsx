@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import DotGrid from '../DotGrid';
 
 const steps = [
   { num: '01', icon: '🌍', title: 'Identidad verificada', desc: 'WorldID ZK proof — eres única, sin revelar tu nombre. Anti-Sybil.' },
@@ -19,8 +20,23 @@ const cardVariants = {
 
 export default function HowItWorks() {
   return (
-    <section id="como" className="min-h-screen flex items-center justify-center border-t border-b border-border bg-base2/60 backdrop-blur-sm">
-      <div className="w-full py-20 px-7 max-w-[1100px] mx-auto">
+    <section id="como" className="relative min-h-screen flex items-center justify-center border-t border-b border-border overflow-hidden">
+      {/* DotGrid background */}
+      <div className="absolute inset-0 z-0">
+        <DotGrid
+          dotSize={4}
+          gap={22}
+          baseColor="#3A1A0A"
+          activeColor="#C2672A"
+          proximity={130}
+          shockRadius={220}
+          shockStrength={4}
+          resistance={750}
+          returnDuration={1.5}
+        />
+      </div>
+
+      <div className="relative z-10 w-full py-20 px-7 max-w-[1100px] mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <motion.div
