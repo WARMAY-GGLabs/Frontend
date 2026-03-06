@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage';
 import AppDemoPage from './pages/app-demo/AppDemoPage';
 import ComoFuncionaPage from './pages/como-funciona/ComoFuncionaPage';
 import InstitucionalPage from './pages/institucional/InstitucionalPage';
+import TecnologiaPage from './pages/tecnologia/TecnologiaPage';
 
 type Page = 'inicio' | 'app' | 'crisis' | 'prenatal' | 'blockchain' | 'nosotros';
 
@@ -19,6 +20,10 @@ function App() {
 
   if (page === 'prenatal') {
     return <InstitucionalPage onPageChange={setPage} />;
+  }
+
+  if (page === 'blockchain') {
+    return <TecnologiaPage onPageChange={setPage} />;
   }
 
   return <LandingPage onPageChange={setPage} />;
