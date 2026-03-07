@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import VariableProximity from '../ui/VariableProximity';
 import TextType from '../TextType';
@@ -6,13 +6,7 @@ import ShapeBlur from '../ShapeBlur';
 import CountUp from '../CountUp';
 import StarBorder from '../StarBorder';
 
-const TOTAL_FRAMES = 192;
 const SCROLL_HEIGHT = '600vh';
-
-function getFramePath(index: number): string {
-  const num = String(index + 1).padStart(3, '0');
-  return `/img/ezgif-frame-${num}.png`;
-}
 
 /* ── Headline with VariableProximity effect ── */
 function HeadlineContent() {
@@ -316,118 +310,32 @@ function TextOverlay({
 /* ── Main component ── */
 export default function ImageSequenceScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const [loaded, setLoaded] = useState(0);
-  const [ready, setReady] = useState(false);
-  const frameRef = useRef(0);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
 
-  const frameIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
-
-  // Preload all images
-  useEffect(() => {
-    const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
-
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img = new Image();
-      img.src = getFramePath(i);
-      img.onload = () => {
-        loadedCount++;
-        setLoaded(loadedCount);
-        if (loadedCount === TOTAL_FRAMES) {
-          setReady(true);
-        }
-      };
-      images.push(img);
-    }
-
-    imagesRef.current = images;
-  }, []);
-
-  // Draw frame to canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(dpr, dpr);
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const drawFrame = (index: number) => {
-      const img = imagesRef.current[index];
-      if (!img || !img.complete) return;
-
-      const cw = canvas.width / (window.devicePixelRatio || 1);
-      const ch = canvas.height / (window.devicePixelRatio || 1);
-
-      ctx.clearRect(0, 0, cw, ch);
-
-      // "Cover" fit (fill entire canvas)
-      const imgRatio = img.width / img.height;
-      const canvasRatio = cw / ch;
-      let drawW: number, drawH: number, offsetX: number, offsetY: number;
-
-      if (imgRatio > canvasRatio) {
-        drawH = ch;
-        drawW = ch * imgRatio;
-        offsetX = (cw - drawW) / 2;
-        offsetY = 0;
-      } else {
-        drawW = cw;
-        drawH = cw / imgRatio;
-        offsetX = 0;
-        offsetY = (ch - drawH) / 2;
-      }
-
-      ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
-    };
-
-    // Draw first frame
-    if (ready) drawFrame(0);
-
-    const unsubscribe = frameIndex.on('change', (v) => {
-      const idx = Math.min(Math.floor(v), TOTAL_FRAMES - 1);
-      if (idx !== frameRef.current) {
-        frameRef.current = idx;
-        requestAnimationFrame(() => drawFrame(idx));
-      }
-    });
-
-    return () => {
-      unsubscribe();
-      window.removeEventListener('resize', resizeCanvas);
-    };
-  }, [ready, frameIndex]);
-
-  const loadProgress = Math.round((loaded / TOTAL_FRAMES) * 100);
-
   return (
     <div ref={containerRef} style={{ height: SCROLL_HEIGHT }} className="relative">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Canvas — the image sequence */}
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        {/* Video de fondo — autoplay en bucle continuo */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/video/video final.mp4" type="video/mp4" />
+        </video>
 
         {/* Dark gradient overlay for text legibility */}
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-base/50 via-transparent to-base/60 pointer-events-none" />
 
         {/* Text overlays fade in/out at different scroll points */}
-        {ready && textSections.map((section, i) => (
+        {textSections.map((section, i) => (
           <TextOverlay
             key={i}
             range={section.range}
@@ -436,29 +344,6 @@ export default function ImageSequenceScroll() {
             {section.content}
           </TextOverlay>
         ))}
-
-        {/* Loading overlay */}
-        {!ready && (
-          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-base/95 backdrop-blur-xl">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-earth to-panic flex items-center justify-center text-xl mb-4 shadow-[0_0_20px_#C2672A40]">
-              🌸
-            </div>
-            <div className="font-display font-black text-lg mb-3 bg-gradient-to-r from-earth-light to-sun bg-clip-text text-transparent">
-              WARMAY
-            </div>
-            <div className="w-48 h-1.5 bg-base3 rounded-full overflow-hidden mb-2">
-              <motion.div
-                className="h-full bg-gradient-to-r from-earth to-sun rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${loadProgress}%` }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-            <div className="font-mono text-xs text-muted">
-              Cargando experiencia... {loadProgress}%
-            </div>
-          </div>
-        )}
 
         {/* Scroll indicator */}
         <motion.div
