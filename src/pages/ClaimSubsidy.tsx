@@ -4,7 +4,7 @@ import { IDKitWidget, ISuccessResult } from '@worldcoin/idkit';
 import { AlertCircle, CheckCircle2, Loader2, HeartHandshake } from 'lucide-react';
 
 const BACKEND_URL = "http://localhost:3001";
-const WORLDID_APP_ID = "app_xxxxxxxxxxxxxxxxxxxxx"; // Reemplazar con APP_ID real
+const WORLDID_APP_ID = "app_27fe5301affa50a0abf058d1125bc7ea"; 
 const WORLDID_ACTION = "warmay-claim";
 
 const TEXTS = {

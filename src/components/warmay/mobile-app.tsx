@@ -422,7 +422,7 @@ export function MobileApp() {
           <h2 className="font-serif font-black text-xl text-[#FDF6EC] mt-1">Verificacion de identidad</h2>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+        <div className="flex-1 overflow-y-auto scrollbar-hide px-4 py-3 space-y-4" style={{ scrollbarWidth: 'none' }}>
           {/* World ID hero */}
           <div className="bg-linear-to-br from-[rgba(79,70,229,0.15)] to-[rgba(124,58,237,0.1)] border border-[#4F46E5]/40 rounded-2xl p-5 text-center">
             <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#4F46E5] to-[#7C3AED] flex items-center justify-center mx-auto mb-3">
