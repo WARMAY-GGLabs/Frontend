@@ -133,7 +133,7 @@ export default function HeroSection() {
               viewport={{ once: true }}
               className="text-center px-6 py-4 rounded-2xl min-w-[140px] bg-base2/88 backdrop-blur-md border border-border"
             >
-              <div className="stat-num font-display font-black text-4xl bg-gradient-to-br from-earth to-sun bg-clip-text text-transparent">
+              <div className="stat-num font-display font-black text-4xl bg-linear-to-br from-earth to-sun bg-clip-text text-transparent">
                 0{stat.suffix}
               </div>
               <div
@@ -154,7 +154,7 @@ export default function HeroSection() {
           <motion.button
             whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="glow-btn px-8 py-4 rounded-xl border-none cursor-pointer font-body text-[15px] font-extrabold bg-gradient-to-br from-earth to-earth-dark text-white transition-all duration-250"
+            className="glow-btn px-8 py-4 rounded-xl border-none cursor-pointer font-body text-[15px] font-extrabold bg-linear-to-br from-earth to-earth-dark text-white transition-all duration-250"
           >
             🌸 Acceder a la App
           </motion.button>

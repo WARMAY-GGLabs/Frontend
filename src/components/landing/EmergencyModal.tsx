@@ -48,7 +48,7 @@ export default function EmergencyModal({ isOpen, onClose }: EmergencyModalProps)
             className="bg-base2/96 backdrop-blur-2xl border-2 border-panic rounded-[22px] max-w-[480px] w-full overflow-hidden shadow-[0_0_60px_#DC262250]"
           >
             {/* Header */}
-            <div className="bg-gradient-to-br from-panic to-panic-dark p-5.5 text-center">
+            <div className="bg-linear-to-br from-panic to-panic-dark p-5.5 text-center">
               <h2 className="font-display font-black text-xl text-white mb-0.5">
                 🚨 EMERGENCIA ACTIVADA
               </h2>

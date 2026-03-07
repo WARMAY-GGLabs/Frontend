@@ -103,7 +103,7 @@ export default function HowItWorks() {
                       <div className="font-bold text-[15px] mb-2 text-[#F5E6D3]">{step.title}</div>
                       <div className="text-[12px] text-[#B8915A] leading-[1.6]">{step.desc}</div>
                     </div>
-                    <div className="h-[2px] rounded-full bg-gradient-to-r from-earth to-transparent mt-4" />
+                    <div className="h-[2px] rounded-full bg-linear-to-r from-earth to-transparent mt-4" />
                   </div>
                 }
               />

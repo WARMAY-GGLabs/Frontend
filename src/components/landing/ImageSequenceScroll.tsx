@@ -327,7 +327,7 @@ export default function ImageSequenceScroll() {
         </video>
 
         {/* Dark gradient overlay for text legibility */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-base/50 via-transparent to-base/60 pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-linear-to-b from-base/50 via-transparent to-base/60 pointer-events-none" />
 
         {/* Text overlays fade in/out at different scroll points */}
         {textSections.map((section, i) => (

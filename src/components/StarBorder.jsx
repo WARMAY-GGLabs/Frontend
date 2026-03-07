@@ -40,7 +40,7 @@ const StarBorder = ({
       ></div>
       <div
         className={`relative z-1 text-center rounded-[18px]
-          bg-gradient-to-b from-black to-gray-900
+          bg-linear-to-b from-black to-gray-900
           border border-gray-800
           text-white text-[16px] py-[16px] px-[26px]
           transition-all duration-300

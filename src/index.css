@@ -1,161 +1,55 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* ══════════════════════════════════════
-   WARMAY — Custom Theme (Tailwind v4)
-══════════════════════════════════════ */
-@theme {
-  --font-display: 'Outfit', 'Playfair Display', Georgia, serif;
-  --font-body: 'Outfit', 'Nunito', 'Helvetica Neue', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-
-  --color-earth: #C2672A;
-  --color-earth-dark: #8B3A10;
-  --color-earth-light: #E8895A;
-  --color-panic: #DC2626;
-  --color-panic-dark: #991B1B;
-  --color-panic-light: #FCA5A5;
-  --color-life: #15803D;
-  --color-life-light: #4ADE80;
-  --color-sun: #F59E0B;
-  --color-sun-light: #FDE68A;
-  --color-base: #1A0800;
-  --color-base2: #271205;
-  --color-base3: #3D1E0A;
-  --color-border: #5C3018;
-  --color-muted: #9A6040;
-  --color-warmay-text: #FDF6EC;
-  --color-warmay-text2: #E8C9A0;
-  --color-warmay-text3: #B8915A;
-}
-
-/* ── Base ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--color-base);
-  color: var(--color-warmay-text);
-  font-family: var(--font-body);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-a { color: inherit; text-decoration: none; }
-
-/* Selection */
-::selection {
-  background: var(--color-earth);
-  color: white;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--color-base); }
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover { background: var(--color-earth); }
-
-/* Ambient mesh gradient */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 50% at 10% 90%, #C2672A18 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 10%, #F59E0B0C 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 50% 50%, #DC262608 0%, transparent 70%);
-}
-
-#root {
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Floating particles ── */
-.particle {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  border-radius: 50%;
-  opacity: 0;
-  animation: particleFloat linear infinite;
-}
-
-@keyframes particleFloat {
-  0% { opacity: 0; transform: translateY(100vh) scale(0); }
-  10% { opacity: 0.3; }
-  90% { opacity: 0.3; }
-  100% { opacity: 0; transform: translateY(-100px) scale(1); }
-}
-
-/* ── Wiphala bar ── */
-.wiphala-bar {
-  height: 5px;
-  background: linear-gradient(90deg,
-    #E40303 14.28%, #FF8C00 14.28% 28.56%, #FFED00 28.56% 42.84%,
-    #008026 42.84% 57.12%, #004DFF 57.12% 71.40%, #750787 71.40% 85.68%, #FFFFFF 85.68%);
-}
-
-/* ── Glow button ── */
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 15px #C2672A50, 0 0 30px #C2672A30; }
-  50% { box-shadow: 0 0 25px #C2672A70, 0 0 50px #C2672A40; }
-}
-
-.glow-btn {
-  animation: glowPulse 2s ease-in-out infinite;
-}
-
-/* ── Emergency pulse ── */
-@keyframes panicPulse {
-  0%, 100% { box-shadow: 0 0 0 0 #DC262660; }
-  50% { box-shadow: 0 0 0 8px transparent; }
-}
-
-@keyframes star-movement-bottom {
-  0%   { transform: translate(0%, 0%);    opacity: 1; }
-  100% { transform: translate(-100%, 0%); opacity: 0; }
-}
-
-@keyframes star-movement-top {
-  0%   { transform: translate(0%, 0%);   opacity: 1; }
-  100% { transform: translate(100%, 0%); opacity: 0; }
-}
-
-/* StarBorder hover glow */
-.star-btn:hover {
-  box-shadow: 0 0 20px color-mix(in srgb, var(--star-color) 60%, transparent),
-              0 0 40px color-mix(in srgb, var(--star-color) 25%, transparent);
-}
-.star-btn:active {
-  box-shadow: 0 0 10px color-mix(in srgb, var(--star-color) 40%, transparent);
+:root {
+  /* WARMAY Theme - Terracotta & Earth tones */
+  --background: #1A0800;
+  --foreground: #FDF6EC;
+  --card: #271205;
+  --card-foreground: #FDF6EC;
+  --popover: #271205;
+  --popover-foreground: #FDF6EC;
+  --primary: #C2672A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #3D1E0A;
+  --secondary-foreground: #FDF6EC;
+  --muted: #3D1E0A;
+  --muted-foreground: #9A6040;
+  --accent: #F59E0B;
+  --accent-foreground: #1A0800;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #5C3018;
+  --input: #3D1E0A;
+  --ring: #C2672A;
+  --chart-1: #C2672A;
+  --chart-2: #F59E0B;
+  --chart-3: #15803D;
+  --chart-4: #3B82F6;
+  --chart-5: #8B5CF6;
+  --radius: 0.75rem;
+  
+  /* WARMAY Custom */
+  --earth: #C2672A;
+  --earth-dark: #8B3A10;
+  --earth-light: #E8895A;
+  --panic: #DC2626;
+  --panic-dark: #991B1B;
+  --life: #15803D;
+  --life-light: #4ADE80;
+  --sun: #F59E0B;
+  --sun-light: #FDE68A;
+  --text-primary: #FDF6EC;
+  --text-secondary: #E8C9A0;
+  --text-muted: #B8915A;
 }
 
 @theme inline {
-  --animate-star-movement-bottom: star-movement-bottom linear infinite alternate;
-  --animate-star-movement-top: star-movement-top linear infinite alternate;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: 'Nunito', 'Geist', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Geist Mono', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -171,6 +65,7 @@ body::before {
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -179,83 +74,21 @@ body::before {
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* WARMAY Custom Colors */
+  --color-earth: var(--earth);
+  --color-earth-dark: var(--earth-dark);
+  --color-earth-light: var(--earth-light);
+  --color-panic: var(--panic);
+  --color-panic-dark: var(--panic-dark);
+  --color-life: var(--life);
+  --color-life-light: var(--life-light);
+  --color-sun: var(--sun);
+  --color-sun-light: var(--sun-light);
 }
 
 @layer base {

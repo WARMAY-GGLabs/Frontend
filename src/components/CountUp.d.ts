@@ -1,5 +1,3 @@
-import type { CSSProperties } from 'react';
-
 interface CountUpProps {
   to: number;
   from?: number;
