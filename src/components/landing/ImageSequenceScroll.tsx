@@ -5,6 +5,7 @@ import TextType from '../TextType';
 import ShapeBlur from '../ShapeBlur';
 import CountUp from '../CountUp';
 import StarBorder from '../StarBorder';
+import { useLang } from '../../lib/i18n';
 
 const SCROLL_HEIGHT = '600vh';
 
@@ -56,7 +57,8 @@ function HeadlineContent() {
 
 /* ── Subtitle with word-by-word Framer Motion animation ── */
 function SubtitleContent() {
-  const words = 'WARMAY es la primera plataforma de prevención de mortalidad materna que combina alertas de emergencia, seguimiento prenatal verificado en blockchain y IA trilingüe para madres bolivianas.'.split(' ');
+  const { t } = useLang();
+  const words = t.subtitle.split(' ');
 
   return (
     <div className="max-w-[620px] text-center" style={{ textShadow: '0 2px 16px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.7)' }}>
@@ -75,7 +77,7 @@ function SubtitleContent() {
       <div className="mt-4 flex items-center justify-center gap-2">
         <span className="text-[22px]">🌐</span>
         <TextType
-          text={['Español', 'Quechua · Runa Simi', 'Aymara']}
+          text={t.langNames}
           typingSpeed={60}
           deletingSpeed={35}
           pauseDuration={1800}
@@ -93,13 +95,16 @@ function SubtitleContent() {
 }
 
 /* ── Stats with MagicBento-style cards + ShapeBlur ── */
-const statsData = [
-  { to: 164, suffix: '',  label: 'muertes por cada\n100,000 nacidos vivos', icon: '🩸', glowColor: '194,103,42' },
-  { to: 78,  suffix: '%', label: 'son prevenibles con\natención oportuna',   icon: '💚', glowColor: '21,128,61'  },
-  { to: 47,  suffix: '%', label: 'ocurren en áreas\nrurales sin acceso',     icon: '🌄', glowColor: '245,158,11' },
+const statsBase = [
+  { to: 164, suffix: '',  icon: '🩸', glowColor: '194,103,42' },
+  { to: 78,  suffix: '%', icon: '💚', glowColor: '21,128,61'  },
+  { to: 47,  suffix: '%', icon: '🌄', glowColor: '245,158,11' },
 ];
 
 function StatsContent() {
+  const { t } = useLang();
+  const labels = [t.stats.stat1, t.stats.stat2, t.stats.stat3];
+  const statsData = statsBase.map((s, i) => ({ ...s, label: labels[i] }));
   return (
     <>
       <style>{`
@@ -185,11 +190,12 @@ function StatsContent() {
 /* ── What does WARMAY do? with VariableProximity ── */
 function WarmayFeaturesContent() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   return (
     <div ref={containerRef} className="flex flex-col items-center gap-5" style={{ position: 'relative' }}>
       <div className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase px-3 py-1 bg-earth/15 rounded-full">
-        ¿Qué hace WARMAY?
+        {t.features.badge}
       </div>
       <h2
         className="font-display font-black leading-[1.05] text-center"
@@ -199,7 +205,7 @@ function WarmayFeaturesContent() {
         }}
       >
         <VariableProximity
-          label="Emergencias"
+          label={t.features.line1}
           className="text-earth"
           fromFontVariationSettings="'wght' 400"
           toFontVariationSettings="'wght' 900"
@@ -209,7 +215,7 @@ function WarmayFeaturesContent() {
           style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
         />
         <VariableProximity
-          label="Blockchain"
+          label={t.features.line2}
           className="text-warmay-text"
           fromFontVariationSettings="'wght' 300"
           toFontVariationSettings="'wght' 900"
@@ -219,7 +225,7 @@ function WarmayFeaturesContent() {
           style={{ fontFamily: "'Outfit', sans-serif", display: 'block' }}
         />
         <VariableProximity
-          label="Inteligencia Artificial"
+          label={t.features.line3}
           className="text-sun"
           fromFontVariationSettings="'wght' 300"
           toFontVariationSettings="'wght' 900"
@@ -237,7 +243,7 @@ function WarmayFeaturesContent() {
           thickness={2}
           innerClassName="!py-5 !px-12 !text-[20px] font-extrabold tracking-wide !border-0"
         >
-          🌸 Acceder a la App
+          {t.features.cta1}
         </StarBorder>
         <StarBorder
           as="button"
@@ -247,7 +253,7 @@ function WarmayFeaturesContent() {
           innerClassName="!py-5 !px-12 !text-[20px] font-bold tracking-wide"
           onClick={() => document.getElementById('crisis')?.scrollIntoView({ behavior: 'smooth' })}
         >
-          Conoce más ↓
+          {t.features.cta2}
         </StarBorder>
       </div>
     </div>
@@ -256,22 +262,10 @@ function WarmayFeaturesContent() {
 
 /* ── Text sections that appear at different scroll points ── */
 const textSections = [
-  {
-    range: [0, 0, 0.18, 0.24] as const,
-    content: <HeadlineContent />,
-  },
-  {
-    range: [0.22, 0.28, 0.40, 0.46] as const,
-    content: <SubtitleContent />,
-  },
-  {
-    range: [0.44, 0.50, 0.62, 0.68] as const,
-    content: <StatsContent />,
-  },
-  {
-    range: [0.66, 0.72, 0.88, 0.94] as const,
-    content: <WarmayFeaturesContent />,
-  },
+  { range: [0, 0, 0.18, 0.24] as const,    content: <HeadlineContent /> },
+  { range: [0.22, 0.28, 0.40, 0.46] as const, content: <SubtitleContent /> },
+  { range: [0.44, 0.50, 0.62, 0.68] as const, content: <StatsContent /> },
+  { range: [0.66, 0.72, 0.88, 0.94] as const, content: <WarmayFeaturesContent /> },
 ];
 
 /* ── Overlay that fades in/out based on scroll progress ── */
@@ -310,6 +304,7 @@ function TextOverlay({
 /* ── Main component ── */
 export default function ImageSequenceScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -353,7 +348,7 @@ export default function ImageSequenceScroll() {
           }}
         >
           <span className="font-mono text-[10px] text-muted tracking-[0.2em] uppercase">
-            Desliza para explorar
+            {t.scroll}
           </span>
           <motion.div
             animate={{ y: [0, 8, 0] }}

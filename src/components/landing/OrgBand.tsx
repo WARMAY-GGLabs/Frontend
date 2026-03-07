@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
 import CurvedLoop from '../CurvedLoop';
 import DotGrid from '../DotGrid';
-
-const marqueeText =
-  '🏥 Ministerio de Salud Bolivia ✦ 🌍 OPS / OMS ✦ 🤱 UNICEF ✦ 💙 UNFPA ✦ 🌐 Banco Mundial ✦ ⚕️ ONGs Locales ✦ ';
+import { useLang } from '../../lib/i18n';
 
 export default function OrgBand() {
+  const { t } = useLang();
   return (
     <section id="orgs" className="relative border-t border-border overflow-hidden">
       {/* DotGrid background */}
@@ -32,12 +31,12 @@ export default function OrgBand() {
             viewport={{ once: true }}
             className="text-[30px] text-muted tracking-[0.15em] uppercase mb-2 font-mono pt-20"
           >
-            Diseñado para organismos internacionales
+            {t.orgBand.heading}
           </motion.p>
         </div>
 
         <CurvedLoop
-          marqueeText={marqueeText}
+          marqueeText={t.orgBand.marquee}
           speed={1.2}
           curveAmount={40}
           direction="left"

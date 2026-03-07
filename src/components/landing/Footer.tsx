@@ -1,11 +1,11 @@
-const navLinks = [
-  { href: '#hero', label: 'Misión' },
-  { href: '#crisis', label: 'Causas' },
-  { href: '#como', label: 'Cómo funciona' },
-  { href: '#orgs', label: 'Institucional' },
-];
+import { useLang } from '../../lib/i18n';
 
 export default function Footer() {
+  const { t } = useLang();
+  const navLinks = t.footer.links.map((label, i) => ({
+    href: ['#hero', '#crisis', '#como', '#orgs'][i],
+    label,
+  }));
   return (
     <footer className="w-full bg-[#0A0300] border-t border-[#2A1200] flex flex-col items-center">
       {/* Wiphala bar */}
@@ -45,7 +45,7 @@ export default function Footer() {
 
         {/* Tagline */}
         <p className="text-[13px] text-center max-w-[400px] leading-relaxed" style={{ color: '#7A5030' }}>
-          Salud materna digital en Bolivia — Español · Quechua · Aymara
+          {t.footer.tagline}
         </p>
 
         {/* Nav links */}
@@ -70,7 +70,7 @@ export default function Footer() {
           className="text-[11px] tracking-wide text-center"
           style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#4A2A10' }}
         >
-          © 2026 WARMAY · Programa de Salud Materna · Bolivia
+                    {t.footer.copyright}
         </p>
       </div>
     </footer>

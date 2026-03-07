@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/landing/Navbar';
+import { LangProvider, useLang } from '../lib/i18n';
 
 type Page = 'inicio' | 'app' | 'crisis' | 'prenatal' | 'blockchain' | 'nosotros';
 import ImageSequenceScroll from '../components/landing/ImageSequenceScroll';
@@ -17,7 +18,16 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ onPageChange }: LandingPageProps) {
+  return (
+    <LangProvider>
+      <LandingPageInner onPageChange={onPageChange} />
+    </LangProvider>
+  );
+}
+
+function LandingPageInner({ onPageChange }: LandingPageProps) {
   const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const { t } = useLang();
 
   // Create floating particles on mount
   useEffect(() => {
@@ -86,7 +96,7 @@ export default function LandingPage({ onPageChange }: LandingPageProps) {
         >
           🚨
         </motion.span>
-        EMERGENCIA
+        {t.emergency}
       </motion.button>
     </>
   );

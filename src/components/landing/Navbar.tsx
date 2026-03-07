@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLang } from '../../lib/i18n';
+import type { Lang } from '../../lib/i18n';
 
 // ── CSS Variables & Styles ──
 const styles = `
@@ -167,48 +169,42 @@ const styles = `
 `;
 
 // ── Types ──
-type Lang = "ES" | "QU" | "AY";
 type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
 
-const NAV_ITEMS: { id: Page; label: string }[] = [
-  { id: "inicio",     label: "Misión" },
-  { id: "app",        label: "La App" },
-  { id: "crisis",     label: "¿Cómo funciona?" },
-  { id: "prenatal",   label: "Institucional" },
-  { id: "blockchain", label: "Tecnología" },
-  { id: "nosotros",   label: "Nosotros" },
-];
-
-const LANGS: Lang[] = ["ES", "QU", "AY"];
+const LANGS: Lang[] = ["EN", "ES", "QU", "AY"];
 
 // ── Props ──
 interface NavbarProps {
   activePage?: Page;
-  activeLang?: Lang;
   onPageChange?: (page: Page) => void;
-  onLangChange?: (lang: Lang) => void;
   onPanicClick?: () => void;
 }
 
 // ── Component ──
 export default function Navbar({
   activePage: initialPage = "inicio",
-  activeLang: initialLang = "ES",
   onPageChange,
-  onLangChange,
   onPanicClick,
 }: NavbarProps) {
   const [activePage, setActivePage] = useState<Page>(initialPage);
-  const [activeLang, setActiveLang]  = useState<Lang>(initialLang);
+  const { lang, setLang, t } = useLang();
+
+  const NAV_ITEMS: { id: Page; label: string }[] = [
+    { id: "inicio",     label: t.nav.mission },
+    { id: "app",        label: t.nav.app },
+    { id: "crisis",     label: t.nav.howItWorks },
+    { id: "prenatal",   label: t.nav.institutional },
+    { id: "blockchain", label: t.nav.technology },
+    { id: "nosotros",   label: t.nav.about },
+  ];
 
   const handlePage = (page: Page) => {
     setActivePage(page);
     onPageChange?.(page);
   };
 
-  const handleLang = (lang: Lang) => {
-    setActiveLang(lang);
-    onLangChange?.(lang);
+  const handleLang = (l: Lang) => {
+    setLang(l);
   };
 
   return (
@@ -246,19 +242,19 @@ export default function Navbar({
         {/* Right side: lang switcher + panic button */}
         <div className="nav-right">
           <div className="lang-switcher">
-            {LANGS.map((lang) => (
+            {LANGS.map((l) => (
               <button
-                key={lang}
-                className={`lang-btn${activeLang === lang ? " active" : ""}`}
-                onClick={() => handleLang(lang)}
+                key={l}
+                className={`lang-btn${lang === l ? " active" : ""}`}
+                onClick={() => handleLang(l)}
               >
-                {lang}
+                {l}
               </button>
             ))}
           </div>
 
           <button className="nav-panic" onClick={onPanicClick}>
-            🚨 EMERGENCIA
+            🚨 {t.emergency}
           </button>
         </div>
       </nav>

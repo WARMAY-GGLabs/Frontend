@@ -1,13 +1,10 @@
 import { motion } from 'framer-motion';
 import DotGrid from '../DotGrid';
 import TiltedCard from '../TiltedCard';
+import { useLang } from '../../lib/i18n';
 
-const steps = [
-  { num: '01', icon: '🌍', title: 'Identidad verificada', desc: 'WorldID ZK proof — eres única, sin revelar tu nombre. Anti-Sybil.' },
-  { num: '02', icon: '🚨', title: 'Botón de Pánico', desc: 'Un toque alerta a familiares, hospital cercano y red comunitaria. Funciona sin internet.' },
-  { num: '03', icon: '✅', title: 'Controles verificados', desc: 'Cada control prenatal registrado por el hospital en Chainlink CRE. Inmutable.' },
-  { num: '04', icon: '🪙', title: 'Airdrop de tokens', desc: 'Al completar controles verificados, recibes MOM tokens. Incentivo real.' },
-];
+const stepIcons = ['🌍', '🚨', '✅', '🪙'];
+const stepNums  = ['01', '02', '03', '04'];
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50, rotateX: 10 },
@@ -20,8 +17,15 @@ const cardVariants = {
 };
 
 export default function HowItWorks() {
+  const { t } = useLang();
+  const steps = t.howItWorks.steps.map((s, i) => ({ num: stepNums[i], icon: stepIcons[i], ...s }));
+
   return (
-    <section id="como" className="relative min-h-screen flex items-center justify-center  overflow-hidden">
+    <section
+      id="como"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
+      style={{ background: 'linear-gradient(180deg,#100018 0%,#0A0010 100%)' }}
+    >
       {/* DotGrid background */}
       <div className="absolute inset-0 z-0">
         <DotGrid
@@ -46,7 +50,7 @@ export default function HowItWorks() {
             viewport={{ once: true }}
             className="font-mono text-[11px] tracking-[0.2em] text-earth uppercase mb-3 inline-block px-3 py-1 bg-earth/15 rounded-full"
           >
-            Cómo funciona
+            {t.howItWorks.badge}
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -56,7 +60,7 @@ export default function HowItWorks() {
             className="font-display font-black text-[clamp(28px,5vw,48px)] leading-[1.1]"
             style={{ textShadow: '0 2px 16px rgba(0,0,0,0.7)' }}
           >
-            <span className="text-earth">WARMAY</span> en 4 pasos
+            <span className="text-earth">{t.howItWorks.title1}</span> {t.howItWorks.title2}
           </motion.h2>
         </div>
 <br /><br /><br /><br />

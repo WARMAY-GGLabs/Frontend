@@ -2,14 +2,11 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import DotGrid from '../DotGrid';
 import { gsap } from 'gsap';
+import { useLang } from '../../lib/i18n';
 
-const crisisData = [
-  { pct: 27, icon: '🩸', name: 'Hemorragia Postparto', desc: 'Alerta activa en menos de 30 seg.', color: '#C2672A' },
-  { pct: 22, icon: '⚡', name: 'Eclampsia / Preeclampsia', desc: 'IA predictiva y alerta temprana.', color: '#E67E3A' },
-  { pct: 15, icon: '🦠', name: 'Sepsis / Infección', desc: 'Detección y derivación urgente.', color: '#B13E3E' },
-  { pct: 13, icon: '👶', name: 'Parto Obstruido', desc: 'Hospital obstétrico más cercano.', color: '#C2672A' },
-  { pct: 23, icon: '⚠️', name: 'Otras causas', desc: 'Triage inteligente trilingüe.', color: '#E67E3A' },
-];
+const crisisColors = ['#C2672A', '#E67E3A', '#B13E3E', '#C2672A', '#E67E3A'];
+const crisisIcons = ['🩸', '⚡', '🦠', '👶', '⚠️'];
+const crisisPcts  = [27, 22, 15, 13, 23];
 
 const transformStyles = [
   'rotate(6deg) translate(-180px)',
@@ -21,6 +18,10 @@ const transformStyles = [
 
 function CrisisBounceCards() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
+  const crisisData = t.crisis.cards.map((c, i) => ({
+    pct: crisisPcts[i], icon: crisisIcons[i], color: crisisColors[i], name: c.name, desc: c.desc,
+  }));
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -115,6 +116,7 @@ function CrisisBounceCards() {
 }
 
 export default function CrisisSection() {
+  const { t } = useLang();
   return (
     <section
       id="crisis"
@@ -145,7 +147,7 @@ export default function CrisisSection() {
         transition={{ duration: 0.7 }}
         className="font-mono text-[10px] tracking-[0.35em] text-earth/60 uppercase mb-8"
       >
-        Las 5 causas principales
+        {t.crisis.eyebrow}
       </motion.p>
 
       {/* Title */}
@@ -156,7 +158,7 @@ export default function CrisisSection() {
         transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         className="font-display font-black text-[clamp(42px,7vw,88px)] leading-[1.0] text-center mb-5"
       >
-        <span className="text-earth">Conocer</span> el peligro<br className="hidden sm:block" /> salva vidas
+        <span className="text-earth">{t.crisis.title1}</span> {t.crisis.title2}
       </motion.h2>
 
       {/* Subtitle */}
@@ -167,7 +169,7 @@ export default function CrisisSection() {
         transition={{ duration: 0.6, delay: 0.25 }}
         className="text-warmay-text3 text-[13px] text-center max-w-[380px] mb-20 leading-relaxed"
       >
-        WARMAY detecta estos patrones y activa protocolos de emergencia inmediata.
+        {t.crisis.subtitle}
       </motion.p>
 
       {/* BounceCards grid */}
