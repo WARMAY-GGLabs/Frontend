@@ -1,6 +1,7 @@
-import Navbar from "../../components/landing/Navbar";
+﻿import Navbar from "../../components/landing/Navbar";
 import EmergencyModal from "../../components/landing/EmergencyModal";
 import { useState } from "react";
+import { useLang } from "../../lib/i18n";
 
 type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
 
@@ -366,6 +367,17 @@ const styles = `
 
 export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps) {
   const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const { t } = useLang();
+  const p = t.howItWorksPage;
+
+  const PILLAR_ICONS = ['🔒', '🔍', '🛡️', '👤'];
+  const PILLAR_CLASSES = ['cf-pc-priv', 'cf-pc-trans', 'cf-pc-sec', 'cf-pc-anon'];
+  const PILLAR_TAGS = [
+    [{ cls: 'cf-tt-purple', label: 'ZK Proofs' }, { cls: 'cf-tt-purple', label: 'WorldID' }, { cls: 'cf-tt-green', label: 'Cifrado E2E' }],
+    [{ cls: 'cf-tt-blue', label: 'Chainlink CRE' }, { cls: 'cf-tt-blue', label: 'Sepolia' }, { cls: 'cf-tt-blue', label: 'Etherscan' }],
+    [{ cls: 'cf-tt-green', label: 'Modo discreto' }, { cls: 'cf-tt-green', label: 'Red cifrada' }, { cls: 'cf-tt-orange', label: 'SMS seguro' }],
+    [{ cls: 'cf-tt-orange', label: 'Nullifier Hash' }, { cls: 'cf-tt-purple', label: 'ZK Semaphore' }, { cls: 'cf-tt-blue', label: 'Smart Contract' }],
+  ];
 
   return (
     <div className="cf-root">
@@ -380,11 +392,9 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
       {/* ══ EXPLAINER SECTION ══ */}
       <div className="cf-explainer-section">
         <div className="cf-section-header">
-          <div className="cf-section-label">Transparencia tecnológica</div>
-          <h2 className="cf-section-title">Cómo funciona <em>WARMAY</em></h2>
-          <p className="cf-section-sub">
-            Cada componente tiene un rol específico. Privacidad y seguridad como pilares — no como promesas.
-          </p>
+          <div className="cf-section-label">{p.sectionLabel}</div>
+          <h2 className="cf-section-title">{p.sectionTitle}</h2>
+          <p className="cf-section-sub">{p.sectionSub}</p>
         </div>
 
         <div className="cf-explainer-grid">
@@ -394,43 +404,25 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
             <div className="cf-expl-header">
               <div className="cf-expl-icon cf-ei-worldid">🌍</div>
               <div>
-                <div className="cf-expl-title">WorldID — Identidad Única</div>
-                <div className="cf-expl-subtitle">ZK Semaphore Proof · Anti-Sybil</div>
+                <div className="cf-expl-title">{p.worldidTitle}</div>
+                <div className="cf-expl-subtitle">{p.worldidSub}</div>
               </div>
             </div>
             <div className="cf-flow-steps">
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">1</div>
-                <div className="cf-flow-text">
-                  <strong>Escaneas tu iris en World App</strong>
-                  Un orb especial crea una "huella única" que nunca sale de tu teléfono. No guarda tu cara.
+              {p.worldidSteps.map((s, i) => (
+                <div className="cf-flow-step" key={i}>
+                  <div className="cf-flow-num">{i + 1}</div>
+                  <div className="cf-flow-text">
+                    <strong>{s.title}</strong>
+                    {s.desc}
+                  </div>
                 </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">2</div>
-                <div className="cf-flow-text">
-                  <strong>Se genera un ZK Proof</strong>
-                  Una prueba matemática que demuestra "soy humana y única" sin revelar quién eres. Imposible de falsificar.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">3</div>
-                <div className="cf-flow-text">
-                  <strong>Nullifier hash único</strong>
-                  Cada acción genera un código único que impide reclamar dos veces. Nadie puede suplantar tu identidad.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">4</div>
-                <div className="cf-flow-text">
-                  <strong>CRE verifica en Sepolia</strong>
-                  El workflow Chainlink lee el nullifier en el contrato. Si ya fue usado → rechazado automáticamente.
-                </div>
-              </div>
+              ))}
             </div>
             <div className="cf-badges-row">
-              <span className="cf-privacy-badge cf-pb-private">🔒 Sin nombre ni cara</span>
-              <span className="cf-privacy-badge cf-pb-safe">✓ 1 persona = 1 subsidio</span>
+              {p.worldidBadges.map((b, i) => (
+                <span key={i} className="cf-privacy-badge cf-pb-private">{b}</span>
+              ))}
             </div>
           </div>
 
@@ -439,39 +431,20 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
             <div className="cf-expl-header">
               <div className="cf-expl-icon cf-ei-cre">🔗</div>
               <div>
-                <div className="cf-expl-title">Chainlink CRE — Orquestación</div>
-                <div className="cf-expl-subtitle">DON Consensus · 5 nodos · TypeScript → WASM</div>
+                <div className="cf-expl-title">{p.creTitle}</div>
+                <div className="cf-expl-subtitle">{p.creSub}</div>
               </div>
             </div>
             <div className="cf-flow-steps">
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">1</div>
-                <div className="cf-flow-text">
-                  <strong>La madre activa un control</strong>
-                  El hospital registra la asistencia en su sistema. La API del hospital confirma el control.
+              {p.creSteps.map((s, i) => (
+                <div className="cf-flow-step" key={i}>
+                  <div className="cf-flow-num">{i + 1}</div>
+                  <div className="cf-flow-text">
+                    <strong>{s.title}</strong>
+                    {s.desc}
+                  </div>
                 </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">2</div>
-                <div className="cf-flow-text">
-                  <strong>CRE workflow se dispara</strong>
-                  5 nodos del DON (Decentralized Oracle Network) consultan la API del hospital de forma independiente.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">3</div>
-                <div className="cf-flow-text">
-                  <strong>Consenso BFT</strong>
-                  Los 5 nodos deben acordar el resultado. Si uno miente, los otros 4 lo rechazan. Imposible corromper.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">4</div>
-                <div className="cf-flow-text">
-                  <strong>Escribe en SubsidyVault</strong>
-                  Solo si todo es válido → el CRE escribe en el smart contract de Sepolia y libera los tokens MOM.
-                </div>
-              </div>
+              ))}
             </div>
             <div className="cf-terminal">
               <div className="cf-term-header">
@@ -497,43 +470,25 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
             <div className="cf-expl-header">
               <div className="cf-expl-icon cf-ei-ai">🤖</div>
               <div>
-                <div className="cf-expl-title">Claude AI — Asistente Trilingüe</div>
-                <div className="cf-expl-subtitle">ES · Quechua · Aymara · Tiempo real</div>
+                <div className="cf-expl-title">{p.aiTitle}</div>
+                <div className="cf-expl-subtitle">{p.aiSub}</div>
               </div>
             </div>
             <div className="cf-flow-steps">
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">1</div>
-                <div className="cf-flow-text">
-                  <strong>Pregunta en tu idioma</strong>
-                  Escribe o habla en español, quechua o aymara. La IA entiende los 3 idiomas nativos de Bolivia.
+              {p.aiSteps.map((s, i) => (
+                <div className="cf-flow-step" key={i}>
+                  <div className="cf-flow-num">{i + 1}</div>
+                  <div className="cf-flow-text">
+                    <strong>{s.title}</strong>
+                    {s.desc}
+                  </div>
                 </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">2</div>
-                <div className="cf-flow-text">
-                  <strong>Análisis de síntomas</strong>
-                  Describe lo que sientes → la IA clasifica urgencia (crítica/moderada/leve) y recomienda acción.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">3</div>
-                <div className="cf-flow-text">
-                  <strong>Protocolo de emergencia</strong>
-                  Si detecta síntoma crítico → activa automáticamente el botón de pánico y sugiere el hospital más cercano.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">4</div>
-                <div className="cf-flow-text">
-                  <strong>En el CRE workflow</strong>
-                  Claude también analiza elegibilidad de los controles dentro del Chainlink workflow antes de liberar tokens.
-                </div>
-              </div>
+              ))}
             </div>
             <div className="cf-badges-row">
-              <span className="cf-privacy-badge cf-pb-purple">🧠 claude-haiku-4-5</span>
-              <span className="cf-privacy-badge cf-pb-safe">🌐 3 idiomas</span>
+              {p.aiBadges.map((b, i) => (
+                <span key={i} className={i === 0 ? 'cf-privacy-badge cf-pb-purple' : 'cf-privacy-badge cf-pb-safe'}>{b}</span>
+              ))}
             </div>
           </div>
 
@@ -542,58 +497,33 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
             <div className="cf-expl-header">
               <div className="cf-expl-icon cf-ei-offline">📡</div>
               <div>
-                <div className="cf-expl-title">Modo Offline — Sin Internet</div>
-                <div className="cf-expl-subtitle">SMS fallback · Bolivia rural · Funciona siempre</div>
+                <div className="cf-expl-title">{p.offlineTitle}</div>
+                <div className="cf-expl-subtitle">{p.offlineSub}</div>
               </div>
             </div>
             <div className="cf-flow-steps">
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">1</div>
-                <div className="cf-flow-text">
-                  <strong>Detección automática</strong>
-                  WARMAY detecta si no hay internet. Cambia a modo offline sin que la madre note diferencia.
+              {p.offlineSteps.map((s, i) => (
+                <div className="cf-flow-step" key={i}>
+                  <div className="cf-flow-num">{i + 1}</div>
+                  <div className="cf-flow-text">
+                    <strong>{s.title}</strong>
+                    {s.desc}
+                  </div>
                 </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">2</div>
-                <div className="cf-flow-text">
-                  <strong>Botón de pánico → SMS</strong>
-                  Sin internet: envía SMS de emergencia con coordenadas GPS a contactos de confianza y al número del hospital.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">3</div>
-                <div className="cf-flow-text">
-                  <strong>IA local básica</strong>
-                  Respuestas de emergencia pre-cargadas en los 3 idiomas. Sin necesitar servidor remoto.
-                </div>
-              </div>
-              <div className="cf-flow-step">
-                <div className="cf-flow-num">4</div>
-                <div className="cf-flow-text">
-                  <strong>Sincroniza al reconectar</strong>
-                  Los controles registrados offline se sincronizan automáticamente con Chainlink CRE cuando vuelve el internet.
-                </div>
-              </div>
+              ))}
             </div>
             <div className="cf-offline-mode-demo">
               <div className="cf-offline-badge">
                 <div className="cf-offline-dot-red" />
-                <span>Sin internet detectado — Modo SMS activo</span>
+                <span>{p.offlineBadge}</span>
               </div>
               <div className="cf-offline-steps">
-                <div className="cf-offline-step">
-                  <div className="cf-offline-icon cf-oi-green">📍</div>
-                  GPS guardando ubicación cada 30 seg
-                </div>
-                <div className="cf-offline-step">
-                  <div className="cf-offline-icon cf-oi-blue">💬</div>
-                  IA básica disponible (respuestas locales)
-                </div>
-                <div className="cf-offline-step">
-                  <div className="cf-offline-icon cf-oi-orange">📱</div>
-                  SMS automático al activar emergencia
-                </div>
+                {[['📍', 'cf-oi-green'], ['💬', 'cf-oi-blue'], ['📱', 'cf-oi-orange']].map(([icon, cls], i) => (
+                  <div className="cf-offline-step" key={i}>
+                    <div className={`cf-offline-icon ${cls}`}>{icon}</div>
+                    {p.offlineMiniSteps[i]}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -605,74 +535,28 @@ export default function ComoFuncionaPage({ onPageChange }: ComoFuncionaPageProps
       <div className="cf-pillars-band">
         <div className="cf-pillars-inner">
           <div className="cf-section-header">
-            <div className="cf-section-label">Pilares fundamentales</div>
-            <h2 className="cf-section-title"><em>Privacidad</em> y Seguridad — no son opciones</h2>
-            <p className="cf-section-sub">
-              Cada dato, cada alerta, cada control está diseñado con privacidad by-design. Las madres confían — nosotros lo protegemos.
-            </p>
+            <div className="cf-section-label">{p.pillarsLabel}</div>
+            <h2 className="cf-section-title"><em>{p.pillarsTitle1}</em> {p.pillarsTitle2}</h2>
+            <p className="cf-section-sub">{p.pillarsSub}</p>
           </div>
           <div className="cf-pillars-grid">
-
-            <div className="cf-pillar-card cf-pc-priv">
-              <div className="cf-pillar-icon">🔒</div>
-              <div className="cf-pillar-title">Privacidad por diseño</div>
-              <div className="cf-pillar-desc">
-                Ningún dato personal (nombre, dirección, historial médico) sale de tu dispositivo sin tu consentimiento explícito. WorldID solo prueba que eres humana.
+            {p.pillars.map((pillar, i) => (
+              <div key={i} className={`cf-pillar-card ${PILLAR_CLASSES[i]}`}>
+                <div className="cf-pillar-icon">{PILLAR_ICONS[i]}</div>
+                <div className="cf-pillar-title">{pillar.title}</div>
+                <div className="cf-pillar-desc">{pillar.desc}</div>
+                <div className="cf-pillar-tech">
+                  {PILLAR_TAGS[i].map((tag) => (
+                    <span key={tag.label} className={`cf-tech-tag ${tag.cls}`}>{tag.label}</span>
+                  ))}
+                </div>
               </div>
-              <div className="cf-pillar-tech">
-                <span className="cf-tech-tag cf-tt-purple">ZK Proofs</span>
-                <span className="cf-tech-tag cf-tt-purple">WorldID</span>
-                <span className="cf-tech-tag cf-tt-green">Cifrado E2E</span>
-              </div>
-            </div>
-
-            <div className="cf-pillar-card cf-pc-trans">
-              <div className="cf-pillar-icon">🔍</div>
-              <div className="cf-pillar-title">Transparencia total</div>
-              <div className="cf-pillar-desc">
-                Todos los controles verificados por hospitales están en blockchain — cualquier auditor, ONG o gobierno puede verificar cuántos controles se realizaron, sin ver quién los hizo.
-              </div>
-              <div className="cf-pillar-tech">
-                <span className="cf-tech-tag cf-tt-blue">Chainlink CRE</span>
-                <span className="cf-tech-tag cf-tt-blue">Sepolia</span>
-                <span className="cf-tech-tag cf-tt-blue">Etherscan</span>
-              </div>
-            </div>
-
-            <div className="cf-pillar-card cf-pc-sec">
-              <div className="cf-pillar-icon">🛡️</div>
-              <div className="cf-pillar-title">Seguridad multicapa</div>
-              <div className="cf-pillar-desc">
-                Botón de pánico con modo discreto (vibración silenciosa), red de confianza cifrada, alertas que no revelan el motivo a personas externas a la red.
-              </div>
-              <div className="cf-pillar-tech">
-                <span className="cf-tech-tag cf-tt-green">Modo discreto</span>
-                <span className="cf-tech-tag cf-tt-green">Red cifrada</span>
-                <span className="cf-tech-tag cf-tt-orange">SMS seguro</span>
-              </div>
-            </div>
-
-            <div className="cf-pillar-card cf-pc-anon">
-              <div className="cf-pillar-icon">👤</div>
-              <div className="cf-pillar-title">Anonimato verificable</div>
-              <div className="cf-pillar-desc">
-                Los hospitales solo registran "control realizado" — no el nombre de la paciente. La blockchain solo guarda estadísticas anonimizadas. Cero correlación posible.
-              </div>
-              <div className="cf-pillar-tech">
-                <span className="cf-tech-tag cf-tt-orange">Nullifier Hash</span>
-                <span className="cf-tech-tag cf-tt-purple">ZK Semaphore</span>
-                <span className="cf-tech-tag cf-tt-blue">Smart Contract</span>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </div>
 
-      <EmergencyModal
-        isOpen={emergencyOpen}
-        onClose={() => setEmergencyOpen(false)}
-      />
+      <EmergencyModal isOpen={emergencyOpen} onClose={() => setEmergencyOpen(false)} />
     </div>
   );
 }

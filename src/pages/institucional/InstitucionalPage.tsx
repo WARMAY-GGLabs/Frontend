@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/landing/Navbar";
 import EmergencyModal from "../../components/landing/EmergencyModal";
+import { useLang } from "../../lib/i18n";
 
 type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
 
@@ -206,62 +207,14 @@ const styles = `
   }
 `;
 
-const TARGET_CARDS = [
-  {
-    icon: "🌍",
-    name: "OPS / OMS / UNFPA",
-    desc: "Infraestructura verificable para programas de salud materna. Datos en tiempo real, imposibles de falsificar.",
-    feats: [
-      "Dashboard de métricas por región",
-      "API de integración con SNIS Bolivia",
-      "Reportes blockchain automáticos",
-      "Auditoría en tiempo real",
-    ],
-  },
-  {
-    icon: "🏛️",
-    name: "Gobierno Boliviano",
-    desc: "Política pública digital verificable. Los subsidios llegan a quienes los necesitan, no a intermediarios.",
-    feats: [
-      "Zero corrupción: blockchain + WorldID",
-      "Trilingüe: ES + Quechua + Aymara",
-      "Offline (SMS fallback)",
-      "Compatible SIS y SAFCI",
-    ],
-  },
-  {
-    icon: "🤱",
-    name: "ONGs y OSC Locales",
-    desc: "Herramienta de campo para parteras, promotoras de salud y organizaciones comunitarias.",
-    feats: [
-      "Modo sin internet (SMS)",
-      "Registro offline de controles",
-      "Alerta a red comunitaria",
-      "Capacitación integrada con IA",
-    ],
-  },
-  {
-    icon: "🏦",
-    name: "Fondos y Donantes",
-    desc: "Cada peso donado trazable en blockchain. Saben exactamente cuántas madres se atendieron.",
-    feats: [
-      "Impacto verificable onchain",
-      "ROI social automático",
-      "Transparencia total de fondos",
-      "Certificación ESG/SDG",
-    ],
-  },
-];
-
-const IMPACT_ITEMS = [
-  { num: "-60%",  label: "Reducción mortalidad materna en zonas de cobertura" },
-  { num: "+85%",  label: "Madres que completan todos sus controles prenatales" },
-  { num: "<30s",  label: "Tiempo de respuesta de emergencia a contactos" },
-  { num: "0%",    label: "Fraude posible (WorldID nullifier + blockchain)" },
-];
+const TARGET_ICONS  = ['🌍', '🏛️', '🤱', '🏦'];
+const TARGET_NAMES  = ['OPS / OMS / UNFPA', 'Gobierno Boliviano', 'ONGs y OSC Locales', 'Fondos y Donantes'];
+const IMPACT_NUMS   = ['-60%', '+85%', '<30s', '0%'];
 
 export default function InstitucionalPage({ onPageChange }: InstitucionalPageProps) {
   const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const { t } = useLang();
+  const p = t.institucional;
 
   return (
     <div className="inst-root">
@@ -275,25 +228,23 @@ export default function InstitucionalPage({ onPageChange }: InstitucionalPagePro
 
       {/* ── HERO ── */}
       <div className="inst-hero">
-        <div className="inst-eyebrow">🏛️ Para Organizaciones</div>
-        <h1 className="inst-title"><em>WARMAY</em> para instituciones</h1>
-        <p className="inst-sub">
-          Una plataforma lista para escalar. Verificable, transparente y resistente a la corrupción gracias a blockchain + WorldID.
-        </p>
+        <div className="inst-eyebrow">{p.eyebrow}</div>
+        <h1 className="inst-title"><em>WARMAY</em> — {p.title}</h1>
+        <p className="inst-sub">{p.sub}</p>
         <div className="inst-ctas">
-          <button className="inst-btn-primary">📩 Solicitar Demo</button>
-          <button className="inst-btn-secondary">📄 Descargar Informe</button>
+          <button className="inst-btn-primary">{p.cta1}</button>
+          <button className="inst-btn-secondary">{p.cta2}</button>
         </div>
       </div>
 
       {/* ── TARGET CARDS ── */}
       <div className="inst-target-grid">
-        {TARGET_CARDS.map((card) => (
-          <div key={card.name} className="inst-target-card">
-            <div className="inst-target-icon">{card.icon}</div>
-            <div className="inst-target-name">{card.name}</div>
-            <div className="inst-target-desc">{card.desc}</div>
-            {card.feats.map((f) => (
+        {TARGET_NAMES.map((name, i) => (
+          <div key={name} className="inst-target-card">
+            <div className="inst-target-icon">{TARGET_ICONS[i]}</div>
+            <div className="inst-target-name">{name}</div>
+            <div className="inst-target-desc">{p.targetDescs[i]}</div>
+            {p.targetFeats[i].map((f) => (
               <div key={f} className="inst-feat-item">
                 <span className="inst-feat-check">→</span>
                 {f}
@@ -307,24 +258,21 @@ export default function InstitucionalPage({ onPageChange }: InstitucionalPagePro
       <div className="inst-impact-band">
         <div className="inst-impact-inner">
           <div className="inst-section-header">
-            <div className="inst-section-label">Impacto proyectado</div>
-            <h2 className="inst-section-title">Lo que <em>WARMAY</em> puede lograr</h2>
+            <div className="inst-section-label">{p.impactLabel}</div>
+            <h2 className="inst-section-title">Lo que <em>WARMAY</em> {p.impactTitle2}</h2>
           </div>
           <div className="inst-impact-grid">
-            {IMPACT_ITEMS.map((item) => (
-              <div key={item.num} className="inst-impact-item">
-                <div className="inst-impact-num">{item.num}</div>
-                <div className="inst-impact-label">{item.label}</div>
+            {IMPACT_NUMS.map((num, i) => (
+              <div key={num} className="inst-impact-item">
+                <div className="inst-impact-num">{num}</div>
+                <div className="inst-impact-label">{p.impactLabels[i]}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <EmergencyModal
-        isOpen={emergencyOpen}
-        onClose={() => setEmergencyOpen(false)}
-      />
+      <EmergencyModal isOpen={emergencyOpen} onClose={() => setEmergencyOpen(false)} />
     </div>
   );
 }

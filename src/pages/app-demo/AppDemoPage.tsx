@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Navbar from "../../components/landing/Navbar";
 import EmergencyModal from "../../components/landing/EmergencyModal";
+import { useLang } from "../../lib/i18n";
 
 type Page = 'inicio' | 'app' | 'crisis' | 'prenatal' | 'blockchain' | 'nosotros';
 
@@ -640,59 +641,25 @@ const styles = `
   .ad-btn-send:hover { background: #8B3A10; }
 `;
 
-// ── Data ─────────────────────────────────────────────────────────────────────
-const PRENATAL_CONTROLS = [
-  { id: 1, name: "Primera visita prenatal", week: "Sem 8 · 15 Ene 2026", done: true,  badges: ["hospital", "cre"] },
-  { id: 2, name: "Ecografía I trimestre",   week: "Sem 12 · 12 Feb 2026",done: true,  badges: ["hospital", "cre"] },
-  { id: 3, name: "Análisis de sangre",       week: "Sem 16 · 5 Mar 2026", done: true,  badges: ["hospital", "cre"] },
-  { id: 4, name: "Ecografía morfológica",    week: "Sem 20 · 2 Mar 2026", done: true,  badges: ["hospital", "cre"] },
-  { id: 5, name: "Control presión arterial", week: "Sem 22 · Ayer",       done: true,  badges: ["hospital", "cre"] },
-  { id: 6, name: "Vacuna antitetánica",      week: "Sem 24 · Hoy",        done: true,  badges: ["hospital", "cre"] },
-  { id: 7, name: "Control sem 28",           week: "Pendiente",           done: false, badges: ["pending"] },
-  { id: 8, name: "Ecografía III trimestre",  week: "Sem 32 · Pendiente",  done: false, badges: ["pending"] },
+// ── Static badge metadata (not language-dependent) ──────────────────────────
+const CONTROL_BADGES = [
+  ["hospital", "cre"],
+  ["hospital", "cre"],
+  ["hospital", "cre"],
+  ["hospital", "cre"],
+  ["hospital", "cre"],
+  ["hospital", "cre"],
+  ["pending"],
+  ["pending"],
 ];
 
-const SIDEBAR_ITEMS = [
-  { id: "controles",   icon: "📋", label: "Mis Controles",        badge: "6/12",  badgeClass: "badge-earth" },
-  { id: "mapa",        icon: "🗺️", label: "Mapa de Emergencia",   badge: "LIVE",  badgeClass: "badge-panic" },
-  { id: "hospitales",  icon: "🏥", label: "Hospitales Blockchain", badge: "12 ✓", badgeClass: "badge-life"  },
-  { id: "tokens",      icon: "🪙", label: "Mis Tokens MOM",        badge: "120",   badgeClass: "badge-sun"  },
-  { id: "confianza",   icon: "👥", label: "Red de Confianza",      badge: "3",     badgeClass: "badge-blue" },
-];
-
-const SYMPTOMS = [
-  { id: "sangrado",   label: "🩸 Sangrado" },
-  { id: "convulsion", label: "⚡ Convulsión" },
-  { id: "dolor",      label: "😣 Dolor fuerte" },
-  { id: "fiebre",     label: "🌡️ Fiebre alta" },
-  { id: "mareo",      label: "💫 Mareo" },
-  { id: "bebe",       label: "🫀 Bebé no mueve" },
-];
-
-const INITIAL_MESSAGES: Message[] = [
-  {
-    id: 1,
-    role: "bot" as const,
-    text: "¡Hola! Soy la IA de WARMAY. Estoy aquí para ayudarte con cualquier duda sobre tu embarazo, síntomas o la aplicación. También funciono sin internet mediante SMS. ¿En qué te ayudo? 🌸",
-    time: "ahora",
-  },
-  {
-    id: 2,
-    role: "bot" as const,
-    text: "🚑 Ambulancia notificada. ETA: 8-12 min. Quédate tranquila, ayuda en camino. ¿Necesitas instrucciones mientras esperas?",
-    time: "14:30",
-  },
-];
-
-const QUICK_REPLIES = [
-  "¿Cuándo ir a urgencias?",
-  "Síntomas peligrosos",
-  "¿Cómo funciona offline?",
-  "Hemorragia ¿qué hago?",
-];
+const SIDEBAR_ICONS  = ["📋", "🗺️", "🏥", "🪙", "👥"];
+const SIDEBAR_IDS    = ["controles", "mapa", "hospitales", "tokens", "confianza"];
+const SIDEBAR_BADGES = ["6/12", "LIVE", "12 ✓", "120", "3"];
+const SIDEBAR_BADGE_CLASSES = ["badge-earth", "badge-panic", "badge-life", "badge-sun", "badge-blue"];
 
 // ── SVG Progress Ring ──────────────────────────────────────────────────────
-function ProgressRing({ pct }: { pct: number }) {
+function ProgressRing({ pct, label }: { pct: number; label: string }) {
   const r = 34;
   const circ = 2 * Math.PI * r;
   const offset = circ - (pct / 100) * circ;
@@ -713,7 +680,7 @@ function ProgressRing({ pct }: { pct: number }) {
       </svg>
       <div className="ad-ring-center">
         <span className="ad-ring-pct">{pct}%</span>
-        <span className="ad-ring-lbl">avance</span>
+        <span className="ad-ring-lbl">{label}</span>
       </div>
     </div>
   );
@@ -721,6 +688,30 @@ function ProgressRing({ pct }: { pct: number }) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
+  const { t } = useLang();
+  const d = t.appDemo;
+
+  const PRENATAL_CONTROLS = d.controls.map((c, i) => ({
+    id: i + 1,
+    name: c.name,
+    week: c.week,
+    done: i < 6,
+    badges: CONTROL_BADGES[i],
+  }));
+  const SIDEBAR_ITEMS = SIDEBAR_IDS.map((id, i) => ({
+    id,
+    icon: SIDEBAR_ICONS[i],
+    label: d.sidebar[i],
+    badge: SIDEBAR_BADGES[i],
+    badgeClass: SIDEBAR_BADGE_CLASSES[i],
+  }));
+  const SYMPTOMS = d.symptoms.map((label, i) => ({ id: `sym${i}`, label }));
+  const INITIAL_MESSAGES: Message[] = [
+    { id: 1, role: "bot" as const, text: d.initMsg1, time: "ahora" },
+    { id: 2, role: "bot" as const, text: d.initMsg2, time: "14:30" },
+  ];
+  const QUICK_REPLIES = d.quickReplies;
+
   const [emergencyOpen, setEmergencyOpen] = useState(false);
   const [activeSymptom, setActiveSymptom] = useState<string | null>(null);
   const [activeSideItem, setActiveSideItem] = useState("controles");
@@ -777,23 +768,23 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
           {/* Online indicator */}
           <div className="ad-offline-badge">
             <span className="ad-offline-dot" />
-            En línea · GPS activo
+            {d.onlineBadge}
           </div>
 
           {/* PANIC ZONE */}
           <div className="ad-panic-zone">
-            <div className="ad-panic-label">🚨 BOTÓN DE EMERGENCIA</div>
+            <div className="ad-panic-label">{d.panicLabel}</div>
             <button
               className="ad-panic-circle-btn"
               onClick={() => setEmergencyOpen(true)}
               aria-label="Activar alerta de emergencia"
             >
               <div className="ad-panic-circle">SOS</div>
-              <div className="ad-panic-text">PEDIR AYUDA<br />AHORA</div>
-              <div className="ad-panic-sub">Toca para activar alerta</div>
+              <div className="ad-panic-text">{d.panicText.split('\n')[0]}<br />{d.panicText.split('\n')[1]}</div>
+              <div className="ad-panic-sub">{d.panicSub}</div>
             </button>
 
-            <div className="ad-symp-label">¿qué sientes?</div>
+            <div className="ad-symp-label">{d.sympLabel}</div>
             <div className="ad-symp-grid">
               {SYMPTOMS.map((s) => (
                 <button
@@ -829,23 +820,23 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
           <div className="ad-prenatal-card">
             <div className="ad-card-header">
               <div>
-                <div className="ad-card-title">📋 Controles Prenatales</div>
-                <div className="ad-card-meta">Verificados por hospital + Chainlink CRE · Sepolia</div>
+                <div className="ad-card-title">{d.prenatalTitle}</div>
+                <div className="ad-card-meta">{d.prenatalMeta}</div>
               </div>
               <div className="ad-card-progress">
                 6 / 12<br />
-                <span style={{ color: "#9A6040" }}>50% completado</span>
+                <span style={{ color: "#9A6040" }}>50{d.pctSuffix}</span>
               </div>
             </div>
             <div className="ad-card-body">
               {/* Patient info + ring */}
               <div className="ad-ring-wrap">
-                <ProgressRing pct={50} />
+                <ProgressRing pct={50} label={d.progressLabel} />
                 <div className="ad-ring-info">
                   <h3>María Quispe</h3>
                   <p>
-                    Semana 24 · Próximo control: <strong>Sem 28</strong>.{" "}
-                    Completa 2 controles más para el próximo airdrop.
+                    Semana 24 · {d.nextControlLabel} <strong>Sem 28</strong>.{" "}
+                    {d.airdropRing}
                   </p>
                 </div>
               </div>
@@ -874,10 +865,10 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
                             }`}
                           >
                             {b === "hospital"
-                              ? "🏥 Hospital"
+                              ? d.badgeHospital
                               : b === "cre"
-                              ? "🔗 CRE"
-                              : "⏳ Pendiente"}
+                              ? d.badgeCre
+                              : d.badgePending}
                           </span>
                         ))}
                       </div>
@@ -892,14 +883,14 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
           <div className="ad-airdrop-card">
             <div className="ad-airdrop-icon">🪙</div>
             <div className="ad-airdrop-info">
-              <h3>¡Tienes tokens disponibles!</h3>
-              <p>6 controles verificados por hospital + Chainlink CRE + WorldID. ¡Reclama tus MOM!</p>
+              <h3>{d.airdropTitle}</h3>
+              <p>{d.airdropDesc}</p>
               <div className="ad-airdrop-tokens">
-                120&nbsp;<span>MOM ganados</span>
+                120&nbsp;<span>{d.momEarned}</span>
               </div>
             </div>
             <button className="ad-btn-airdrop">
-              🪙 Reclamar
+              {d.claimBtn}
             </button>
           </div>
         </main>
@@ -910,7 +901,7 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
             <div className="ad-ai-avatar">🌸</div>
             <div>
               <div className="ad-ai-name">WARMAY IA</div>
-              <div className="ad-ai-status">En línea · Claude AI</div>
+              <div className="ad-ai-status">{d.aiStatus}</div>
             </div>
             <div className="ad-chat-lang">
               {["ES", "QU", "AY"].map((l) => (
@@ -926,7 +917,7 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
           </div>
 
           <div className="ad-offline-bar">
-            📡 Modo offline disponible · SMS automático sin internet
+            {d.offlineBar}
           </div>
 
           <div className="ad-chat-messages">
@@ -961,7 +952,7 @@ export default function AppDemoPage({ onPageChange }: AppDemoPageProps) {
           <div className="ad-chat-input-area">
             <textarea
               className="ad-chat-input"
-              placeholder="Escribe tu consulta..."
+              placeholder={d.chatPlaceholder}
               rows={1}
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}

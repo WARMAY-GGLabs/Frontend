@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/landing/Navbar";
 import EmergencyModal from "../../components/landing/EmergencyModal";
+import { useLang } from "../../lib/i18n";
 
 type Page = "inicio" | "app" | "crisis" | "prenatal" | "blockchain" | "nosotros";
 
@@ -264,73 +265,26 @@ const styles = `
   }
 `;
 
-const ARCH_NODES = [
-  {
-    icon: "👩‍🍼",
-    title: "Madre / Beneficiaria",
-    desc: "Botón de pánico, controles, IA trilingüe ES/QU/AY. Offline SMS.",
-    badge: "UI · Vinext",
-    badgeClass: "ab-app",
-  },
-  {
-    icon: "🌍",
-    title: "WorldID IDKit",
-    desc: "ZK Semaphore proof. Nullifier único por persona por programa. Anti-Sybil.",
-    badge: "ZK Proof",
-    badgeClass: "ab-worldid",
-  },
-  {
-    icon: "🏥",
-    title: "Hospital API",
-    desc: "Los hospitales verificados registran controles. CRE consulta con DON consensus (5 nodos BFT).",
-    badge: "API Externa",
-    badgeClass: "ab-evm",
-  },
-  {
-    icon: "🔗",
-    title: "Chainlink CRE Workflow",
-    desc: "Orquesta: WorldID → Hospital API (DON) → Claude AI elegibilidad → EVM read nullifier → EVM write SubsidyVault.",
-    badge: "CRE DON",
-    badgeClass: "ab-cre",
-  },
-  {
-    icon: "🤖",
-    title: "Claude AI (Anthropic)",
-    desc: "LLM-in-the-loop. Elegibilidad + consejería trilingüe. Si rechaza → no escribe onchain.",
-    badge: "LLM",
-    badgeClass: "ab-ai",
-  },
-  {
-    icon: "⬡",
-    title: "SubsidyVault · Sepolia",
-    desc: "Recibe CRE writeReport. Verifica nullifier. Transfiere MOM tokens. Registra control anónimo.",
-    badge: "EVM Write",
-    badgeClass: "ab-evm",
-  },
-];
+// Static node metadata (icons/badges don't change with language)
+const NODE_ICONS        = ["👩‍🍼", "🌍", "🏥", "🔗", "🤖", "⬡"];
+const NODE_BADGES       = ["UI · Vinext", "ZK Proof", "API Externa", "CRE DON", "LLM", "EVM Write"];
+const NODE_BADGE_CLASSES = ["ab-app", "ab-worldid", "ab-evm", "ab-cre", "ab-ai", "ab-evm"];
+const CHECKLIST_DONE    = [true, true, true, true, true, true, false];
 
 const TERMINAL_LINES = [
-  { ts: "2026-03-04T12:00:00Z", tag: "[SIMULATION]", tagClass: "t-sim", text: "Simulator Initialized" },
-  { ts: "2026-03-04T12:00:01Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Control prenatal Sem 24 · WorldID verified ✓" },
-  { ts: "2026-03-04T12:00:02Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Hospital API → control VERIFICADO (5 nodos DON)" },
-  { ts: "2026-03-04T12:00:03Z", tag: "[USER LOG]",   tagClass: "t-log", text: '[WARMAY] Claude AI: APPROVE 97% confianza · "Control válido"' },
-  { ts: "2026-03-04T12:00:04Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Nullifier Sepolia → fresh ✓" },
+  { ts: "2026-03-04T12:00:00Z", tag: "[SIMULATION]", tagClass: "t-sim", text: "Simulator Initialized", highlight: null, pre: null, post: null },
+  { ts: "2026-03-04T12:00:01Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Control prenatal Sem 24 · WorldID verified ✓", highlight: null, pre: null, post: null },
+  { ts: "2026-03-04T12:00:02Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Hospital API → control VERIFICADO (5 nodos DON)", highlight: null, pre: null, post: null },
+  { ts: "2026-03-04T12:00:03Z", tag: "[USER LOG]",   tagClass: "t-log", text: '[WARMAY] Claude AI: APPROVE 97% confianza · "Control válido"', highlight: null, pre: null, post: null },
+  { ts: "2026-03-04T12:00:04Z", tag: "[USER LOG]",   tagClass: "t-log", text: "[WARMAY] Nullifier Sepolia → fresh ✓", highlight: null, pre: null, post: null },
   { ts: "2026-03-04T12:00:05Z", tag: "[USER LOG]",   tagClass: "t-log", text: null, highlight: "20 MOM", pre: "[WARMAY] SubsidyVault.claim() → ", post: " tokens" },
   { ts: "2026-03-04T12:00:11Z", tag: "[USER LOG]",   tagClass: "t-log", text: null, highlight: "0x6346d9ee...bfbf9e6", pre: "[WARMAY] ✅ txHash: ", post: "" },
 ];
 
-const CHECKLIST = [
-  { done: true,  title: "CRE workflow creado y simulable",       desc: "cre workflow simulate warmay-maternal-workflow --broadcast" },
-  { done: true,  title: "Blockchain + API externa + LLM",        desc: "Sepolia EVM + Hospital API (DON BFT) + Claude AI — dentro del CRE workflow" },
-  { done: true,  title: "WorldID + CRE (chain no nativa)",       desc: "Nullifier ZK en Sepolia a través de CRE. Anti-Sybil para airdrop MOM." },
-  { done: true,  title: "IA vinculante + consejería trilingüe",  desc: "Claude AI ES/QU/AY. Si rechaza → no escribe onchain. Offline SMS fallback." },
-  { done: true,  title: "Hospitales verificados en blockchain",  desc: "Checklist inmutable. Transparencia para ONG/Gobierno. Anonimato de pacientes." },
-  { done: true,  title: "Privacidad by-design",                  desc: "ZK proofs + nullifier hash + cifrado E2E + modo discreto + red de confianza privada" },
-  { done: false, title: "Video 3-5 min",                         desc: "Botón pánico → mapa → chat quechua → CRE simulate terminal → txHash Etherscan" },
-];
-
 export default function TecnologiaPage({ onPageChange }: TecnologiaPageProps) {
   const [showModal, setShowModal] = useState(false);
+  const { t } = useLang();
+  const p = t.tecnologia;
 
   return (
     <>
@@ -345,25 +299,25 @@ export default function TecnologiaPage({ onPageChange }: TecnologiaPageProps) {
 
         <div className="tech-page">
           {/* Header */}
-          <div className="tech-eyebrow">🏆 Hackathon Submission</div>
-          <h2 className="tech-title">WARMAY — Arquitectura Técnica</h2>
+          <div className="tech-eyebrow">{p.eyebrow}</div>
+          <h2 className="tech-title">{p.title}</h2>
           <p className="tech-subtitle">
-            Chainlink CRE + WorldID + Claude AI + Vinext/Cloudflare · Categorías: CRE+IA | WorldID+CRE
+            {p.subtitle}
           </p>
 
           {/* Architecture flow */}
           <div className="arch-flow">
-            {ARCH_NODES.map((node, i) => (
+            {p.nodes.map((node, i) => (
               <>
                 <div className="arch-node" key={node.title}>
-                  <div className="arch-node-icon">{node.icon}</div>
+                  <div className="arch-node-icon">{NODE_ICONS[i]}</div>
                   <div className="arch-node-text">
                     <h3>{node.title}</h3>
                     <p>{node.desc}</p>
                   </div>
-                  <span className={`arch-badge ${node.badgeClass}`}>{node.badge}</span>
+                  <span className={`arch-badge ${NODE_BADGE_CLASSES[i]}`}>{NODE_BADGES[i]}</span>
                 </div>
-                {i < ARCH_NODES.length - 1 && (
+                {i < p.nodes.length - 1 && (
                   <div className="arch-arrow" key={`arrow-${i}`}>↓</div>
                 )}
               </>
@@ -412,9 +366,9 @@ export default function TecnologiaPage({ onPageChange }: TecnologiaPageProps) {
 
           {/* Checklist */}
           <div className="tech-checklist">
-            {CHECKLIST.map((item) => (
+            {p.checklist.map((item, i) => (
               <div className="check-row" key={item.title}>
-                <span className="check-ico">{item.done ? "✅" : "⬜"}</span>
+                <span className="check-ico">{CHECKLIST_DONE[i] ? "✅" : "⬜"}</span>
                 <div className="check-body">
                   <strong>{item.title}</strong>
                   <span>{item.desc}</span>
